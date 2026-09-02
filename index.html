@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Monetag Site Verification Meta Tag -->
+    <meta name="monetag" content="713c462f8287529e227a1dc55fdecd73">
+    
+    <title>EarnPro - Telegram Mini App</title>
+    
+    <!-- Telegram Web App SDK -->
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    
+    <!-- Monetag MultiTag / Service Worker Integration Script -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                navigator.serviceWorker.register('/sw.js').catch(function(err) {
+                    // Fallback configuration for Telegram Mini App hosting environments
+                    console.log('Service Worker scope adjustment active');
+                });
+            });
+        }
+    </script>
+    
+    <!-- Monetag Inline Service Worker Engine Script -->
+    <script>
+        // Initializing Monetag Zone Config (Domain: 5gvci.com, Zone ID: 11711232)
+        window._monetag_options = {
+            domain: "5gvci.com",
+            zoneId: 11711232
+        };
+    </script>
+    <script src="https://5gvci.com/act/files/tag.min.js" data-zone="11711232" async></script>
+
+    <style>
+        :root {
+            --bg-color: #f4f6f9;
+            --card-bg: #ffffff;
+            --text-color: #333333;
+            --primary-color: #0088cc;
+            --accent-color: #28a745;
+            --danger-color: #dc3545;
+            --border-radius: 12px;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .container {
+            width: 100%;
+            max-width: 480px;
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: var(--border-radius);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            box-sizing: border-box;
+        }
+        h1 {
+            font-size: 22px;
+            text-align: center;
+            color: var(--primary-color);
+            margin-top: 0;
+        }
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            text-align: center;
+            margin-top: 15px;
+            text-decoration: none;
+        }
+        .btn:active {
+            opacity: 0.9;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Garments Hero App</h1>
+        <p style="text-align: center;">Welcome to your Telegram Mini App!</p>
+        
+        <!-- App content goes here -->
+        <button class="btn" onclick="alert('Working successfully!')">Start Earning</button>
+    </div>
+
+</body>
+</html>
