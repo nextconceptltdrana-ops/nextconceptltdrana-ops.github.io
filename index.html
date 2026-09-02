@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>EarnPro - 1 Lakh Levels</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        :root {
+            --tg-bg: var(--tg-theme-bg-color, #ffffff);
+            --tg-text: var(--tg-theme-text-color, #222222);
+            --tg-hint: var(--tg-theme-hint-color, #999999);
+            --tg-btn: var(--tg-theme-button-color, #2481cc);
+            --tg-btn-text: var(--tg-theme-button-text-color, #ffffff);
+            --secondary-bg: var(--tg-theme-secondary-bg-color, #f0f2f5);
+            --gold: #ff9800;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--tg-bg);
+            color: var(--tg-text);
+            margin: 0; padding: 0;
+            overflow-x: hidden;
+        }
+
+        .container { padding: 15px; max-width: 500px; margin: auto; }
+        .page { display: none; }
+        .active { display: block; }
+
+        /* Card Style */
+        .card {
+            background: var(--secondary-bg);
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+
+        /* Notice Board */
+        .notice-board {
+            background: #fff9c4;
+            color: #856404;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border-left: 5px solid #fbc02d;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        /* Input & Buttons */
+        input {
+            width: 100%; padding: 12px; margin: 10px 0;
+            border: 1px solid var(--tg-hint); border-radius: 8px;
+            background: var(--tg-bg); color: var(--tg-text);
+            box-sizing: border-box;
+        }
+
+        button {
+            width: 100%; padding: 15px; background: var(--tg-btn);
+            color: var(--tg-btn-text); border: none; border-radius: 10px;
+            font-weight: bold; font-size: 16px; cursor: pointer;
+        }
+
+        button:disabled { background: #ccc; }
+
+        /* Progress Bar */
+        .progress-container {
+            background: #e0e0e0; height: 12px; border-radius: 10px;
+            margin: 15px 0; overflow: hidden;
+        }
+        .progress-fill {
+            background: linear-gradient(90deg, #4caf50, #8bc34a);
+            width: 0%; height: 100%; transition: 0.3s;
+        }
+
+        /* Spin Wheel */
+        .wheel-box {
+            display: none; text-align: center; margin-top: 20px;
+        }
+        #wheel {
+            width: 150px; height: 150px; border-radius: 50%;
+            border: 5px solid var(--tg-text); margin: 10px auto;
+            transition: transform 3s cubic-bezier(0.17, 0.67, 0.12, 0.99);
+            background: conic-gradient(red 0% 25%, gold 25% 50%, blue 50% 75%, green 75% 100%);
+        }
+
+        /* Admin UI */
+        .admin-link {
+            font-size: 12px; color: var(--tg-hint); text-align: center;
+            margin-top: 20px; text-decoration: underline; cursor: pointer;
+        }
+
+        /* Ad Placeholder */
+        .ad-placeholder {
+            width: 100%; height: 60px; background: #eee;
+            border: 1px dashed #bbb; margin: 10px 0;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 10px; color: #777;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    
+    <!-- 1. REGISTRATION PAGE -->
+    <div id="reg-page" class="page active">
+        <div class="card">
+            <h2>User Registration</h2>
+            <p>Complete your profile to start earning.</p>
+            <input type="text" id="u-name" placeholder="Full Name">
+            <input type="tel" id="u-mobile" placeholder="Mobile Number">
+            <input type="password" id="u-pin" placeholder="Set 4-Digit PIN" maxlength="4">
+            <button onclick="handleRegister()">Create Account</button>
+        </div>
+    </div>
+
+    <!-- 2. DASHBOARD PAGE -->
+    <div id="dash-page" class="page">
+        <!-- Live Notice Board -->
+        <div class="notice-board" id="notice-text">
+            Welcome! Complete 12 video views to reach the next level.
+        </div>
+
+        <div class="card" style="text-align: center; background: var(--tg-btn); color: var(--tg-btn-text);">
+            <small>Total Balance</small>
+            <h1 id="bal-val">0.00 Taka</h1>
+            <div style="display: flex; justify-content: space-between;">
+                <span>Level: <b id="lvl-val">1</b> / 100,000</span>
+                <span>User: <b id="name-val">User</b></span>
+            </div>
+        </div>
+
+        <!-- Ad Placeholder -->
+        <div class="ad-placeholder">ADSTERRA / MONETAG BANNER</div>
+
+        <div class="card">
+            <h3>Level Progress</h3>
+            <p>Watch 12 videos to finish Level <span id="lvl-next">1</span></p>
+            <div class="progress-container">
+                <div id="progress-bar" class="progress-fill"></div>
+            </div>
+            <p id="view-stats">0 / 12 Videos Seen</p>
+            <button id="ad-btn" onclick="simulateVideoAd()">Watch Video Ad</button>
+
+            <!-- Spin Wheel Bonus -->
+            <div id="wheel-box" class="wheel-box">
+                <hr>
+                <h3>Bonus Spin!</h3>
+                <div id="wheel"></div>
+                <button id="spin-btn" onclick="handleSpin()">Spin & Claim 0.10 Taka</button>
+            </div>
+        </div>
+
+        <div class="ad-placeholder">NATIVE AD (MONETAG)</div>
+        
+        <div class="admin-link" onclick="openAdmin()">Admin Login</div>
+    </div>
+
+    <!-- 3. ADMIN PANEL -->
+    <div id="admin-page" class="page">
+        <div class="card">
+            <h2>Admin Panel</h2>
+            <label>Update Notice Board:</label>
+            <input type="text" id="new-notice" placeholder="Enter new notice...">
+            <button onclick="updateNotice()">Broadcast Notice</button>
+            <button style="margin-top:10px; background: #666;" onclick="showPage('dash-page')">Back to Dashboard</button>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    const tg = window.Telegram.WebApp;
+    tg.expand();
+
+    // APP STATE
+    let state = JSON.parse(localStorage.getItem('app_data')) || {
+        name: "",
+        mobile: "",
+        pin: "",
+        balance: 0.00,
+        level: 1,
+        views: 0,
+        notice: "Welcome to EarnPro! Start watching ads to earn 0.10 Taka per level.",
+        isRegistered: false
+    };
+
+    // ADMIN CONFIG
+    const ADMIN_PIN = "9988"; // Set your secret admin pin here
+
+    // INITIALIZE
+    if(state.isRegistered) {
+        showPage('dash-page');
+        updateUI();
+    }
+
+    function showPage(id) {
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+    }
+
+    function handleRegister() {
+        const n = document.getElementById('u-name').value;
+        const m = document.getElementById('u-mobile').value;
+        const p = document.getElementById('u-pin').value;
+
+        if(n && m && p.length === 4) {
+            state.name = n;
+            state.mobile = m;
+            state.pin = p;
+            state.isRegistered = true;
+            save();
+            showPage('dash-page');
+            updateUI();
+        } else {
+            tg.showAlert("Please fill all details correctly.");
+        }
+    }
+
+    function simulateVideoAd() {
+        // Place Adsterra/Monetag Rewarded Logic Here
+        tg.showConfirm("Loading Rewarded Video... Did you watch the full ad?", (ok) => {
+            if(ok) {
+                state.views++;
+                if(state.views >= 12) {
+                    document.getElementById('ad-btn').disabled = true;
+                    document.getElementById('wheel-box').style.display = 'block';
+                    tg.showAlert("12 Views Complete! Now spin the wheel to finish the level.");
+                }
+                updateUI();
+                save();
+            }
+        });
+    }
+
+    function handleSpin() {
+        const wheel = document.getElementById('wheel');
+        const deg = Math.floor(5000 + Math.random() * 5000);
+        wheel.style.transform = `rotate(${deg}deg)`;
+        document.getElementById('spin-btn').disabled = true;
+
+        setTimeout(() => {
+            state.level++;
+            state.balance += 0.10;
+            state.views = 0;
+            
+            tg.showAlert(`Level ${state.level - 1} Complete! 0.10 Taka added.`);
+            
+            // Reset for next level
+            document.getElementById('wheel-box').style.display = 'none';
+            document.getElementById('ad-btn').disabled = false;
+            document.getElementById('spin-btn').disabled = false;
+            wheel.style.transition = 'none';
+            wheel.style.transform = 'rotate(0deg)';
+            setTimeout(() => wheel.style.transition = 'transform 3s cubic-bezier(0.17, 0.67, 0.12, 0.99)', 50);
+            
+            updateUI();
+            save();
+        }, 3500);
+    }
+
+    function updateUI() {
+        document.getElementById('bal-val').innerText = state.balance.toFixed(2) + " Taka";
+        document.getElementById('lvl-val').innerText = state.level.toLocaleString();
+        document.getElementById('lvl-next').innerText = state.level;
+        document.getElementById('name-val').innerText = state.name;
+        document.getElementById('view-stats').innerText = `${state.views} / 12 Videos Seen`;
+        document.getElementById('notice-text').innerText = state.notice;
+        
+        const prog = (state.views / 12) * 100;
+        document.getElementById('progress-bar').style.width = prog + "%";
+    }
+
+    // ADMIN LOGIC
+    function openAdmin() {
+        const p = prompt("Enter Admin Security PIN:");
+        if(p === ADMIN_PIN) {
+            showPage('admin-page');
+        } else {
+            tg.showAlert("Access Denied!");
+        }
+    }
+
+    function updateNotice() {
+        const txt = document.getElementById('new-notice').value;
+        if(txt) {
+            state.notice = txt;
+            save();
+            updateUI();
+            tg.showAlert("Notice Updated Globally!");
+            showPage('dash-page');
+        }
+    }
+
+    function save() {
+        localStorage.setItem('app_data', JSON.stringify(state));
+    }
+</script>
+
+</body>
+</html>
