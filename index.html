@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EarnPro - Telegram Mini App</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        :root {
+            --bg-color: #f4f6f9;
+            --card-bg: #ffffff;
+            --text-color: #333333;
+            --primary-color: #0088cc;
+            --accent-color: #28a745;
+            --danger-color: #dc3545;
+            --border-radius: 12px;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .container {
+            width: 100%;
+            max-width: 480px;
+        }
+        .notice-board {
+            background: #fff3cd;
+            border: 1px solid #ffeeba;
+            color: #856404;
+            padding: 10px;
+            border-radius: var(--border-radius);
+            font-size: 14px;
+            margin-bottom: 12px;
+            text-align: center;
+            font-weight: 500;
+        }
+        .card {
+            background: var(--card-bg);
+            padding: 15px;
+            border-radius: var(--border-radius);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            margin-bottom: 12px;
+        }
+        .balance-card {
+            background: linear-gradient(135deg, #0088cc, #005f99);
+            color: white;
+            text-align: center;
+        }
+        .balance-amount {
+            font-size: 28px;
+            font-weight: bold;
+            margin: 8px 0;
+        }
+        .flex-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        .ad-space {
+            background: #e9ecef;
+            border: 2px dashed #ced4da;
+            padding: 12px;
+            text-align: center;
+            color: #6c757d;
+            border-radius: var(--border-radius);
+            font-size: 13px;
+            margin: 10px 0;
+        }
+        .btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            width: 100%;
+            padding: 12px;
+            border-radius: var(--border-radius);
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 8px;
+            transition: opacity 0.2s;
+        }
+        .btn:active { opacity: 0.8; }
+        .btn-success { background-color: var(--accent-color); }
+        .btn-danger { background-color: var(--danger-color); }
+        
+        .progress-bar-container {
+            background: #e9ecef;
+            border-radius: 8px;
+            height: 10px;
+            width: 100%;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+        .progress-bar {
+            background-color: var(--accent-color);
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+        input, select {
+            width: 100%;
+            padding: 10px;
+            margin: 6px 0 12px 0;
+            border: 1px solid #ced4da;
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-size: 14px;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .modal-content {
+            background: white;
+            padding: 20px;
+            border-radius: var(--border-radius);
+            width: 90%;
+            max-width: 400px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        .close-btn {
+            float: right;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: bold;
+            color: #aaa;
+        }
+        .history-item {
+            background: #f8f9fa;
+            padding: 8px 12px;
+            border-radius: 6px;
+            margin-bottom: 6px;
+            font-size: 13px;
+            border-left: 4px solid var(--primary-color);
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- Live Notice Board -->
+    <div class="notice-board" id="liveNotice">
+        📢 Welcome to EarnPro! Complete levels, watch ads, and withdraw securely via bKash, Rocket, or Nagad.
+    </div>
+
+    <!-- Balance & Level Card -->
+    <div class="card balance-card">
+        <div>Total Balance</div>
+        <div class="balance-amount" id="userBalance">0.00 Taka</div>
+        <div class="flex-row">
+            <span id="userLevelDisplay">Level: 1 / 100,000</span>
+            <span id="userNameDisplay">User: Rana</span>
+        </div>
+    </div>
+
+    <!-- Ad Banner Top -->
+    <div class="ad-space">ADSTERRA / MONETAG BANNER</div>
+
+    <!-- Level Progress Card -->
+    <div class="card">
+        <h3 style="margin-top:0; font-size:16px;">Level Progress</h3>
+        <div id="levelStatusText">Watch 12 videos to finish Level 1</div>
+        <div class="progress-bar-container">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+        <div style="font-size: 13px; color: #666; margin-bottom: 8px;" id="videoCountText">0 / 12 Videos Seen</div>
+        <button class="btn" onclick="watchVideoAd()">Watch Video Ad</button>
+        <button class="btn btn-success" onclick="openWithdrawModal()" style="margin-top: 10px;">Withdraw Money</button>
+    </div>
+
+    <!-- Ad Native -->
+    <div class="ad-space">NATIVE AD (MONETAG)</div>
+
+    <!-- Footer Links -->
+    <div style="text-align: center; margin-top: 15px;">
+        <a href="#" onclick="openAdminModal(); return false;" style="color: #666; font-size: 13px; text-decoration: none;">Admin Login</a>
+    </div>
+</div>
+
+<!-- Withdraw Modal -->
+<div class="modal" id="withdrawModal">
+    <div class="modal-content">
+        <span class="close-btn" onclick="closeModal('withdrawModal')">&times;</span>
+        <h3>Request Withdrawal</h3>
+        <p style="font-size: 13px; color: #666;">Limit: 100 Taka to 500 Taka</p>
+        <label>Select Method</label>
+        <select id="withdrawMethod">
+            <option value="bKash">bKash</option>
+            <option value="Nagad">Nagad</option>
+            <option value="Rocket">Rocket</option>
+        </select>
+        <label>Account Number</label>
+        <input type="text" id="withdrawAccount" placeholder="017xxxxxxxx">
+        <label>Amount (BDT)</label>
+        <input type="number" id="withdrawAmountInput" placeholder="Min 100, Max 500">
+        <button class="btn btn-success" onclick="submitWithdrawRequest()">Submit Request</button>
+        <div id="withdrawHistoryList" style="margin-top: 15px;">
+            <h4>Your Requests</h4>
+            <div id="userReqs"></div>
+        </div>
+    </div>
+</div>
+
+<!-- Admin Modal -->
+<div class="modal" id="adminModal">
+    <div class="modal-content">
+        <span class="close-btn" onclick="closeModal('adminModal')">&times;</span>
+        <div id="adminLoginView">
+            <h3>Admin Login</h3>
+            <input type="password" id="adminPinInput" placeholder="Enter 4-digit PIN (9988)">
+            <button class="btn" onclick="verifyAdminPin()">Login</button>
+        </div>
+        <div id="adminDashboardView" style="display: none;">
+            <h3>Admin Dashboard</h3>
+            <label>Update Notice Board</label>
+            <input type="text" id="adminNoticeInput" placeholder="New announcement...">
+            <button class="btn" onclick="updateNotice()">Save Notice</button>
+            
+            <h4 style="margin-top: 20px;">Pending Withdraw Requests</h4>
+            <div id="adminRequestsList">No pending requests.</div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // App State Management
+    let userData = JSON.parse(localStorage.getItem('earnProUserData')) || {
+        balance: 0.0,
+        level: 1,
+        videosWatched: 0,
+        name: "Rana",
+        requests: []
+    };
+
+    let globalData = JSON.parse(localStorage.getItem('earnProGlobalData')) || {
+        notice: "📢 Welcome to EarnPro! Complete levels, watch ads, and withdraw securely via bKash, Rocket, or Nagad.",
+        allRequests: []
+    };
+
+    function saveData() {
+        localStorage.setItem('earnProUserData', JSON.stringify(userData));
+        localStorage.setItem('earnProGlobalData', JSON.stringify(globalData));
+        updateUI();
+    }
+
+    function updateUI() {
+        document.getElementById('userBalance').innerText = userData.balance.toFixed(2) + " Taka";
+        document.getElementById('userLevelDisplay').innerText = `Level: ${userData.level.toLocaleString()} / 100,000`;
+        document.getElementById('userNameDisplay').innerText = `User: ${userData.name}`;
+        
+        let progress = (userData.videosWatched / 12) * 100;
+        document.getElementById('progressBar').style.width = progress + "%";
+        document.getElementById('videoCountText').innerText = `${userData.videosWatched} / 12 Videos Seen`;
+        document.getElementById('levelStatusText').innerText = `Watch 12 videos to finish Level ${userData.level}`;
+        document.getElementById('liveNotice').innerText = globalData.notice;
+
+        // Render user request history
+        let reqHtml = "";
+        if(userData.requests.length === 0) {
+            reqHtml = "<p style='font-size:12px; color:#888;'>No requests made yet.</p>";
+        } else {
+            userData.requests.forEach(req => {
+                reqHtml += `<div class="history-item"><b>${req.method}</b> (${req.acc}): ৳${req.amount} - <span style="color:${req.status==='Success'?'green':(req.status==='Rejected'?'red':'orange')}">${req.status}</span></div>`;
+            });
+        }
+        document.getElementById('userReqs').innerHTML = reqHtml;
+    }
+
+    function watchVideoAd() {
+        // Simulating video ad watch
+        alert("Simulating video ad... Watch complete!");
+        userData.videosWatched++;
+
+        if (userData.videosWatched >= 12) {
+            userData.videosWatched = 0;
+            userData.level++;
+            userData.balance += 0.10; // 10 Poisha reward per level
+            alert(`Congratulations! Level completed. Earned 0.10 Taka. Moving to Level ${userData.level}`);
+        }
+        saveData();
+    }
+
+    function openWithdrawModal() {
+        document.getElementById('withdrawModal').style.display = 'flex';
+    }
+
+    function openAdminModal() {
+        document.getElementById('adminModal').style.display = 'flex';
+    }
+
+    function closeModal(modalId) {
+        document.getElementById(modalId).style.display = 'none';
+    }
+
+    function submitWithdrawRequest() {
+        let method = document.getElementById('withdrawMethod').value;
+        let acc = document.getElementById('withdrawAccount').value;
+        let amount = parseFloat(document.getElementById('withdrawAmountInput').value);
+
+        if(!acc || isNaN(amount)) {
+            alert("Please enter valid account and amount.");
+            return;
+        }
+
+        if(amount < 100 || amount > 500) {
+            alert("Withdraw amount must be between 100 Taka and 500 Taka!");
+            return;
+        }
+
+        if(userData.balance < amount) {
+            alert("Insufficient balance for this withdrawal!");
+            return;
+        }
+
+        // Deduct balance instantly upon request or lock it
+        userData.balance -= amount;
+
+        let reqObj = {
+            id: Date.now(),
+            user: userData.name,
+            method: method,
+            acc: acc,
+            amount: amount,
+            status: 'Pending'
+        };
+
+        userData.requests.push(reqObj);
+        globalData.allRequests.push(reqObj);
+        saveData();
+        alert("Withdrawal request submitted successfully! Waiting for Admin approval.");
+        closeModal('withdrawModal');
+    }
+
+    function verifyAdminPin() {
+        let pin = document.getElementById('adminPinInput').value;
+        if(pin === "9988") {
+            document.getElementById('adminLoginView').style.display = 'none';
+            document.getElementById('adminDashboardView').style.display = 'block';
+            loadAdminRequests();
+        } else {
+            alert("Incorrect PIN!");
+        }
+    }
+
+    function updateNotice() {
+        let newNotice = document.getElementById('adminNoticeInput').value;
+        if(newNotice) {
+            globalData.notice = newNotice;
+            saveData();
+            alert("Notice updated successfully!");
+        }
+    }
+
+    function loadAdminRequests() {
+        let listHtml = "";
+        let pendingReqs = globalData.allRequests.filter(r => r.status === 'Pending');
+        
+        if(pendingReqs.length === 0) {
+            listHtml = "<p style='font-size:13px; color:#888;'>No pending requests.</p>";
+        } else {
+            pendingReqs.forEach(req => {
+                listHtml += `<div class="history-item">
+                    <b>${req.user}</b> | ${req.method}: ${req.acc}<br>
+                    Amount: <b>৳${req.amount}</b><br>
+                    <button class="btn btn-success" style="padding:4px 8px; font-size:12px; margin-top:4px;" onclick="approveRequest(${req.id})">Approve</button>
+                    <button class="btn btn-danger" style="padding:4px 8px; font-size:12px; margin-top:4px;" onclick="rejectRequest(${req.id})">Reject</button>
+                </div>`;
+            });
+        }
+        document.getElementById('adminRequestsList').innerHTML = listHtml;
+    }
+
+    function approveRequest(id) {
+        let req = globalData.allRequests.find(r => r.id === id);
+        if(req) {
+            req.status = 'Success';
+            // Sync with user data
+            let uReq = userData.requests.find(r => r.id === id);
+            if(uReq) uReq.status = 'Success';
+            saveData();
+            loadAdminRequests();
+            alert("Request Approved Successfully!");
+        }
+    }
+
+    function rejectRequest(id) {
+        let req = globalData.allRequests.find(r => r.id === id);
+        if(req) {
+            req.status = 'Rejected';
+            // Refund balance on reject
+            userData.balance += req.amount;
+            let uReq = userData.requests.find(r => r.id === id);
+            if(uReq) uReq.status = 'Rejected';
+            saveData();
+            loadAdminRequests();
+            alert("Request Rejected and Amount Refunded.");
+        }
+    }
+
+    // Initialize UI on load
+    updateUI();
+</script>
+
+</body>
+</html>
