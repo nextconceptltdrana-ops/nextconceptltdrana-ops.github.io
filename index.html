@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Earn Pro - Fixed Registration</title>
+    
+    <!-- Monetag Verification -->
+    <meta name="monetag" content="713c462f8287529e227a1dc55fdecd73">
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+    <style>
+        :root {
+            --tg-bg: var(--tg-theme-bg-color, #ffffff);
+            --tg-text: var(--tg-theme-text-color, #222222);
+            --tg-hint: var(--tg-theme-hint-color, #999999);
+            --tg-btn: var(--tg-theme-button-color, #2481cc);
+            --tg-btn-text: var(--tg-theme-button-text-color, #ffffff);
+            --secondary-bg: var(--tg-theme-secondary-bg-color, #f0f2f5);
+        }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: var(--tg-bg);
+            color: var(--tg-text);
+            margin: 0; padding: 0;
+            text-align: center;
+        }
+
+        .container { padding: 15px; max-width: 500px; margin: auto; }
+        .page { display: none; }
+        .active { display: block; }
+
+        .card {
+            background: var(--secondary-bg);
+            padding: 25px; border-radius: 15px;
+            margin-bottom: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        input {
+            width: 100%; padding: 14px; margin: 10px 0;
+            border: 1px solid #ccc; border-radius: 10px;
+            font-size: 16px; box-sizing: border-box;
+            outline: none;
+        }
+
+        input:focus { border-color: var(--tg-btn); }
+
+        button {
+            width: 100%; padding: 15px; background: var(--tg-btn);
+            color: var(--tg-btn-text); border: none; border-radius: 10px;
+            font-weight: bold; font-size: 16px; cursor: pointer; margin-top: 10px;
+        }
+
+        .notice-board {
+            background: #fff9c4; color: #856404; padding: 12px;
+            border-radius: 8px; margin-bottom: 15px; font-weight: bold;
+        }
+
+        .progress-container {
+            background: #e0e0e0; height: 12px; border-radius: 10px; margin: 15px 0;
+        }
+        .progress-fill {
+            background: #4caf50; width: 0%; height: 100%; border-radius: 10px; transition: 0.3s;
+        }
+
+        #wheel {
+            width: 150px; height: 150px; border-radius: 50%;
+            border: 5px solid var(--tg-text); margin: 20px auto;
+            background: conic-gradient(#f44336 0% 25%, #ffeb3b 25% 50%, #2196f3 50% 75%, #4caf50 75% 100%);
+            transition: transform 3s cubic-bezier(0.17, 0.67, 0.12, 0.99);
+        }
+
+        .ad-slot { margin: 15px 0; min-height: 50px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <!-- ব্যানার অ্যাড (এটি রেজিস্ট্রেশন পেজেও থাকবে কিন্তু ক্লিক ব্লক করবে না) -->
+    <div id="top-banner" class="ad-slot">
+        <script>
+            atOptions = { 'key' : '22791b3315db724a6660643268b32cc2', 'format' : 'iframe', 'height' : 50, 'width' : 320, 'params' : {} };
+        </script>
+        <script src="https://www.highrevenueformat.com/22791b3315db724a6660643268b32cc2/invoke.js"></script>
+    </div>
+
+    <!-- রেজিস্ট্রেশন পেজ -->
+    <div id="reg-page" class="page active">
+        <div class="card">
+            <h2 style="margin-top:0;">স্বাগতম</h2>
+            <p style="color: var(--tg-hint);">আপনার অ্যাকাউন্ট তৈরি করুন</p>
+            <input type="text" id="u-name" placeholder="আপনার নাম লিখুন">
+            <input type="tel" id="u-mobile" placeholder="মোবাইল নম্বর">
+            <input type="password" id="u-pin" placeholder="৪ ডিজিট পিন" maxlength="4">
+            <button onclick="handleRegister()">শুরু করুন</button>
+        </div>
+    </div>
+
+    <!-- ড্যাশবোর্ড পেজ -->
+    <div id="dash-page" class="page">
+        <div class="notice-board" id="notice-text">লোডিং...</div>
+
+        <div class="card" style="background: var(--tg-btn); color: #fff; padding: 15px;">
+            <small>ব্যালেন্স</small>
+            <h1 id="bal-val" style="margin: 5px 0;">0.00 Taka</h1>
+            <div style="display: flex; justify-content: space-between; font-size: 13px;">
+                <span>লেভেল: <b id="lvl-val">1</b></span>
+                <span>ইউজার: <b id="name-val">...</b></span>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>ভিডিও টাস্ক (১২টি)</h3>
+            <div class="progress-container"><div id="progress-bar" class="progress-fill"></div></div>
+            <p id="view-stats">0 / 12 সম্পন্ন</p>
+            <button id="ad-btn" onclick="watchVideoAd()">ভিডিও দেখুন (Earn)</button>
+
+            <div id="wheel-box" style="display: none; margin-top: 20px;">
+                <hr>
+                <div id="wheel"></div>
+                <button id="spin-btn" onclick="handleSpin()">স্পিন করে ১০ পয়সা নিন</button>
+            </div>
+        </div>
+
+        <!-- নেটিভ অ্যাড -->
+        <div class="ad-slot">
+            <script async="async" data-cfasync="false" src="https://pl31153987.profitableratecpmnetwork.com/a89c594005448c0475de633a657cd90e/invoke.js"></script>
+            <div id="container-a89c594005448c0475de633a657cd90e"></div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    const tg = window.Telegram.WebApp;
+    tg.expand();
+
+    const DIRECT_LINK = "https://www.profitableratecpmnetwork.com/d1i4k4nb?key=5fbc6b93ccb5d9851c59b8aceb5fae18";
+    
+    let state = JSON.parse(localStorage.getItem('user_app_data')) || {
+        name: "", mobile: "", balance: 0.00, level: 1, views: 0,
+        notice: "টাস্ক পূরণ করে ইনকাম শুরু করুন!",
+        isRegistered: false
+    };
+
+    // অ্যাপ লোড হওয়ার সময় চেক
+    if(state.isRegistered) {
+        loadAggressiveAds(); // শুধুমাত্র রেজিস্টার্ড ইউজারের জন্য পপ-আন্ডার লোড হবে
+        showPage('dash-page');
+        updateUI();
+    }
+
+    function showPage(id) {
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+    }
+
+    // রেজিস্ট্রেশন ফাংশন
+    function handleRegister() {
+        const n = document.getElementById('u-name').value;
+        const m = document.getElementById('u-mobile').value;
+        const p = document.getElementById('u-pin').value;
+
+        if(n.length > 2 && m.length > 9 && p.length === 4) {
+            state.name = n;
+            state.mobile = m;
+            state.isRegistered = true;
+            save();
+            
+            // রেজিস্ট্রেশন সফল হলে অ্যাড লোড করা হবে
+            loadAggressiveAds();
+            showPage('dash-page');
+            updateUI();
+            tg.showAlert("অ্যাকাউন্ট সফলভাবে তৈরি হয়েছে!");
+        } else {
+            tg.showAlert("দয়া করে সঠিক তথ্য দিন (পিন ৪ ডিজিট হতে হবে)");
+        }
+    }
+
+    // পপ-আন্ডার অ্যাড লোড করার ফাংশন (যা রেজিস্ট্রেশন পেজে ডিস্টার্ব করবে না)
+    function loadAggressiveAds() {
+        console.log("Loading Pop-under ads...");
+        
+        // Adsterra Social Bar & Popunder
+        const s1 = document.createElement('script');
+        s1.src = "https://pl31153985.profitableratecpmnetwork.com/ea/0c/49/ea0c49d2fd8eb9b2b97b344ec7a2de5d.js";
+        document.head.appendChild(s1);
+
+        const s2 = document.createElement('script');
+        s2.src = "https://pl31153986.profitableratecpmnetwork.com/06/fc/7b/06fc7b4b1cfbfb2b527a9f3efe47887d.js";
+        document.head.appendChild(s2);
+
+        // Monetag Smart Tag (Onclick)
+        const s3 = document.createElement('script');
+        s3.src = "https://alwingulla.com/88/p.js?z=11711232";
+        s3.async = true;
+        s3.dataset.cfasync = "false";
+        document.head.appendChild(s3);
+    }
+
+    function watchVideoAd() {
+        tg.openLink(DIRECT_LINK);
+        tg.showConfirm("আপনি কি বিজ্ঞাপনটি সম্পূর্ণ দেখেছেন?", (ok) => {
+            if(ok) {
+                state.views++;
+                if(state.views >= 12) {
+                    document.getElementById('ad-btn').disabled = true;
+                    document.getElementById('wheel-box').style.display = 'block';
+                }
+                updateUI(); save();
+            }
+        });
+    }
+
+    function handleSpin() {
+        const wheel = document.getElementById('wheel');
+        const deg = Math.floor(3000 + Math.random() * 3000);
+        wheel.style.transform = `rotate(${deg}deg)`;
+        document.getElementById('spin-btn').disabled = true;
+
+        setTimeout(() => {
+            state.level++;
+            state.balance += 0.10;
+            state.views = 0;
+            tg.showAlert("অভিনন্দন! আপনি ১০ পয়সা বোনাস পেয়েছেন।");
+            
+            document.getElementById('wheel-box').style.display = 'none';
+            document.getElementById('ad-btn').disabled = false;
+            document.getElementById('spin-btn').disabled = false;
+            wheel.style.transition = 'none';
+            wheel.style.transform = 'rotate(0deg)';
+            setTimeout(() => wheel.style.transition = 'transform 3s cubic-bezier(0.17, 0.67, 0.12, 0.99)', 50);
+            
+            updateUI(); save();
+        }, 3500);
+    }
+
+    function updateUI() {
+        document.getElementById('bal-val').innerText = state.balance.toFixed(2) + " Taka";
+        document.getElementById('lvl-val').innerText = state.level;
+        document.getElementById('name-val').innerText = state.name;
+        document.getElementById('view-stats').innerText = `${state.views} / 12 সম্পন্ন`;
+        document.getElementById('notice-text').innerText = state.notice;
+        document.getElementById('progress-bar').style.width = (state.views / 12 * 100) + "%";
+    }
+
+    function save() {
+        localStorage.setItem('user_app_data', JSON.stringify(state));
+    }
+</script>
+
+</body>
+</html>
