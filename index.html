@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Garments Hero Earn Bot</title>
+    <!-- Telegram Web App SDK -->
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    
+    <!-- পপআপ মুক্ত নিরাপদ কোড জোন -->
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 10px;
+            text-align: center;
+        }
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 15px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        .balance-box {
+            font-size: 22px;
+            font-weight: bold;
+            color: #ff9800;
+            margin: 15px 0;
+            background: #fff8e1;
+            padding: 12px;
+            border-radius: 8px;
+        }
+        button {
+            background-color: #2196F3;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            font-size: 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 10px;
+        }
+        button:active { background-color: #0b7dda; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>Garments Hero</h2>
+        <div class="balance-box">
+            টোটাল ব্যালেন্স: <span id="balance">0.7</span>
+        </div>
+        <p>লেভেল: <span id="level">1</span></p>
+        
+        <button onclick="handleSpin()">টোকেন সংগ্রহ করুন</button>
+
+        <div style="margin-top: 15px;">
+            <input type="text" id="refLink" readonly style="width: 75%; padding: 8px;" />
+            <button onclick="copyRef()" style="background-color: #4CAF50; width: 20%; padding: 8px; font-size: 14px; display: inline-block;">কপি</button>
+        </div>
+    </div>
+
+    <script>
+        // Telegram WebApp Init
+        const tg = window.Telegram.WebApp;
+        tg.expand();
+
+        let balance = 0.7;
+        let level = 1;
+
+        // ইউজার রেফারেল লিংক সেটআপ
+        const userId = tg.initDataUnsafe?.user?.id || "01780766607";
+        document.getElementById('refLink').value = `https://t.me/GHESIbot/app?startapp=${userId}`;
+
+        function handleSpin() {
+            try {
+                balance += 0.1;
+                if(balance >= 5) level = 2;
+                
+                document.getElementById('balance').innerText = balance.toFixed(1);
+                document.getElementById('level').innerText = level;
+            } catch (error) {
+                console.error("Error updating score", error);
+            }
+        }
+
+        function copyRef() {
+            const copyText = document.getElementById("refLink");
+            copyText.select();
+            navigator.clipboard.writeText(copyText.value);
+            alert("লিংক কপি সফল হয়েছে!");
+        }
+    </script>
+</body>
+</html>
