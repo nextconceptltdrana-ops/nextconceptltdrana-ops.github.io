@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <!-- Monetag Verification - Verified! -->
+    <meta name="monetag" content="713c462f8287529e227a1dc55fdecd73">
+    
+    <!-- Monetag Professional Ads (Social Bar সরানো হয়েছে, এগুলো শুধু ক্লিকে বা ফুল স্ক্রিনে আসবে) -->
+    <script>(function(s){s.dataset.zone='11715364',s.src='https://n6wxm.com/vignette.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
+    <script src="https://quge5.com/88/tag.min.js" data-zone="275995" async data-cfasync="false"></script>
+    <script>(function(s){s.dataset.zone='11715396',s.src='https://al5sm.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Earn Pro - Clean & Fast Edition</title>
+    
+    <!-- SDKs -->
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
+    <style>
+        :root {
+            --tg-bg: var(--tg-theme-bg-color, #ffffff);
+            --tg-text: var(--tg-theme-text-color, #222222);
+            --tg-btn: var(--tg-theme-button-color, #2481cc);
+            --tg-btn-text: var(--tg-theme-button-text-color, #ffffff);
+            --secondary-bg: var(--tg-theme-secondary-bg-color, #f0f2f5);
+        }
+        body { font-family: 'Segoe UI', sans-serif; background-color: var(--tg-bg); color: var(--tg-text); margin: 0; padding: 0; text-align: center; }
+        .container { padding: 15px; max-width: 500px; margin: auto; }
+        .page { display: none; padding-bottom: 50px; }
+        .active { display: block; }
+        .card { background: var(--secondary-bg); padding: 20px; border-radius: 15px; margin-bottom: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); text-align: left; color: #000; }
+        
+        .token-display { background: linear-gradient(135deg, #FFD700, #FFA500); color: #000; padding: 20px; border-radius: 15px; margin-bottom: 15px; border: 2px solid #fff; text-align: center;}
+        .token-count { font-size: 35px; font-weight: bold; display: block; }
+        .notice-bar { background: #fff9c4; padding: 10px; border-radius: 8px; margin-bottom: 15px; font-size: 13px; font-weight: bold; color: #856404; text-align: center; }
+
+        input { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ccc; border-radius: 8px; box-sizing: border-box; font-size: 16px; }
+        button { width: 100%; padding: 15px; background: var(--tg-btn); color: var(--tg-btn-text); border: none; border-radius: 10px; font-weight: bold; cursor: pointer; }
+        
+        .progress-container { background: #ddd; height: 14px; border-radius: 10px; margin: 10px 0; overflow: hidden; }
+        .progress-fill { background: #4caf50; width: 0%; height: 100%; transition: 0.5s; }
+        
+        .timer-card { background: #1a1a1a; color: #fff; padding: 20px; border-radius: 15px; margin-bottom: 15px; border: 2px solid #FFD700; display: none; }
+        .timer-val { font-size: 24px; font-weight: bold; color: #FFD700; }
+
+        .user-item { background: #fff; padding: 10px; border-radius: 10px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #ddd; font-size: 13px; color: #000; }
+        #loading-screen { padding: 100px 20px; font-weight: bold; font-size: 18px; }
+        .ad-slot { margin: 10px 0; min-height: 55px; background: #eee; border-radius: 10px; display: flex; align-items: center; justify-content: center; overflow: hidden;}
+    </style>
+</head>
+<body>
+
+<div id="loading-screen">সার্ভারের সাথে কানেক্ট হচ্ছে... <br><small>দয়া করে অপেক্ষা করুন</small></div>
+
+<div class="container" id="main-content" style="display: none;">
+
+    <!-- ১. লগইন / রেজিস্ট্রেশন -->
+    <div id="reg-page" class="page">
+        <div class="card" style="text-align: center;">
+            <h2 style="margin:0;">একাউন্ট লগইন</h2>
+            <p style="color: #666; font-size: 13px;">নম্বর ও ৪ ডিজিট পিন দিয়ে লগইন করুন।</p>
+            <input type="text" id="u-name" placeholder="নাম">
+            <input type="tel" id="u-mobile" placeholder="মোবাইল নম্বর">
+            <input type="password" id="u-pin" placeholder="৪ ডিজিট পিন" maxlength="4">
+            <button onclick="handleAuth()">শুরু করুন</button>
+        </div>
+    </div>
+
+    <!-- ২. ড্যাশবোর্ড -->
+    <div id="dash-page" class="page">
+        
+        <div id="notice-text" class="card" style="background:#fff9c4; font-size:12px; font-weight:bold; text-align:center; color:#856404; padding:10px;">টাস্ক পূরণ করে আয় করুন!</div>
+
+        <!-- গেম ক্লোজ টাইমার -->
+        <div id="timer-box" class="timer-card">
+            <h4 style="margin:0; color: #ff4444;">SEASON CLOSED!</h4>
+            <div id="countdown" class="timer-val">00d 00h 00m 00s</div>
+        </div>
+
+        <div class="token-display">
+            <small>মোট ব্যালেন্স</small>
+            <span class="token-count" id="token-val">0.0</span>
+            <div style="display: flex; justify-content: space-between; margin-top: 5px; font-weight: bold; font-size: 14px;">
+                <span>৳ <b id="taka-val">0.00</b></span>
+                <span>লেভেল: <b id="lvl-val">1</b></span>
+            </div>
+        </div>
+
+        <div class="card" style="text-align: center;">
+            <h3 style="margin:0;">ভিডিও টাস্ক (১২টি)</h3>
+            <div class="progress-container"><div id="progress-bar" class="progress-fill"></div></div>
+            <p id="view-stats" style="font-weight:bold; margin-bottom: 15px;">0 / 12 সম্পন্ন</p>
+            <button id="ad-btn" onclick="watchAd()">ভিডিও দেখুন</button>
+            <div id="wheel-box" style="display: none; margin-top: 15px;">
+                <button onclick="handleSpin()" style="background: orange; width: 100%;">সংগ্রহ করুন ৮ টোকেন 🎡</button>
+            </div>
+        </div>
+
+        <!-- Adsterra Banner (এটি বাটনের নিচে) -->
+        <div class="ad-slot">
+            <script type="text/javascript">
+                atOptions = { 'key' : '22791b3315db724a6660643268b32cc2', 'format' : 'iframe', 'height' : 50, 'width' : 320, 'params' : {} };
+            </script>
+            <script type="text/javascript" src="//www.highrevenueformat.com/22791b3315db724a6660643268b32cc2/invoke.js"></script>
+        </div>
+
+        <div class="card">
+            <h4>👫 রেফারেল লিংক</h4>
+            <div id="ref-link" style="background:#fff; padding:8px; border:1px solid #ccc; font-size:10px; word-break:break-all; border-radius:5px; margin-bottom:10px; color:#000;">Loading...</div>
+            <button onclick="copyRef()" style="background:#4caf50;">লিংক কপি করুন</button>
+        </div>
+
+        <div style="margin-top: 20px; font-size: 11px; opacity: 0.3; cursor: pointer;" onclick="goAdmin()">Admin Panel</div>
+    </div>
+
+    <!-- ৩. অ্যাডমিন প্যানেল -->
+    <div id="admin-page" class="page">
+        <div class="card" style="background: #e1f5fe; color: #000;">
+            <h3>Admin Panel</h3>
+            <label>বট নাম (বিনা @):</label>
+            <input type="text" id="adm-bot" placeholder="বটের নাম">
+            <button onclick="updateSettings('botName', 'adm-bot')">বট সেট করুন</button>
+            <hr>
+            <button id="game-btn" onclick="toggleGameStatus()" style="background:red; margin-bottom: 10px;">Close Game (Timer On)</button>
+            <button onclick="toggleWD()" id="m-btn" style="background:orange;">Withdraw On/Off</button>
+            <hr>
+            <div id="user-list-box">লোড হচ্ছে...</div>
+            <button onclick="showPage('dash-page')" style="background:#666; margin-top:20px;">বন্ধ করুন</button>
+        </div>
+        
+        <!-- অ্যাডমিন পেজের নিচে নেটিভ অ্যাড -->
+        <div class="ad-slot">
+            <script async="async" data-cfasync="false" src="https://pl31153987.profitableratecpmnetwork.com/a89c594005448c0475de633a657cd90e/invoke.js"></script>
+            <div id="container-a89c594005448c0475de633a657cd90e"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const firebaseConfig = {
+        apiKey: "AIzaSyAy-ogRVGaUbTJSmy1oZau2fD8WPj-C6xQ",
+        authDomain: "garments-hero-apps-mini.firebaseapp.com",
+        databaseURL: "https://garments-hero-apps-mini-default-rtdb.asia-southeast1.firebasedatabase.app",
+        projectId: "garments-hero-apps-mini",
+        storageBucket: "garments-hero-apps-mini.firebasestorage.app",
+        messagingSenderId: "876997460555",
+        appId: "1:876997460555:web:bef4562686d791022243ce"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+    const tg = window.Telegram.WebApp;
+    tg.expand();
+
+    let currentMobile = localStorage.getItem('user_mobile');
+    let userData = { tokens: 0, level: 1, views: 0 };
+    let settings = { botName: "Bot", missionComplete: false, gameClosed: false, closeStartTime: 0 };
+    let timerInt;
+
+    async function handleAuth() {
+        const name = document.getElementById('u-name').value;
+        const mobile = document.getElementById('u-mobile').value;
+        const pin = document.getElementById('u-pin').value;
+        const refId = tg.initDataUnsafe.start_param || null;
+
+        if (name && mobile.length >= 10 && pin.length === 4) {
+            db.ref('users/' + mobile).once('value', async (snap) => {
+                if (snap.exists()) {
+                    const data = snap.val();
+                    if(data.pin === pin) { userData = data; loginSuccess(mobile); } else { alert("ভুল পিন!"); }
+                } else {
+                    userData = { name, mobile, pin, tokens: 0, level: 1, views: 0, refBy: refId, totalEarn: 0 };
+                    await db.ref('users/' + mobile).set(userData);
+                    if(refId && refId !== mobile) {
+                        db.ref('users/' + refId + '/tokens').set(firebase.database.ServerValue.increment(400));
+                    }
+                    loginSuccess(mobile);
+                }
+            });
+        } else { alert("সঠিক তথ্য দিন।"); }
+    }
+
+    function loginSuccess(mobile) {
+        localStorage.setItem('user_mobile', mobile);
+        currentMobile = mobile;
+        showPage('dash-page');
+        updateUI();
+    }
+
+    function watchAd() {
+        tg.openLink("https://www.profitableratecpmnetwork.com/d1i4k4nb?key=5fbc6b93ccb5d9851c59b8aceb5fae18");
+        setTimeout(() => {
+            tg.showConfirm("আপনি কি বিজ্ঞাপনটি সম্পূর্ণ দেখেছেন?", (ok) => {
+                if (ok) {
+                    userData.views = (userData.views || 0) + 1;
+                    db.ref('users/' + currentMobile + '/views').set(userData.views);
+                    updateUI();
+                }
+            });
+        }, 1500);
+    }
+
+    async function handleSpin() {
+        if(userData.views < 12) return;
+        const btn = document.getElementById('spin-btn');
+        if(btn) btn.disabled = true;
+        userData.level++; userData.tokens += 8; userData.totalEarn += 8; userData.views = 0;
+        if(userData.refBy && userData.totalEarn >= 40000) {
+            db.ref('users/' + userData.refBy + '/tokens').set(firebase.database.ServerValue.increment(0.4));
+        }
+        await db.ref('users/' + currentMobile).update({ level: userData.level, tokens: userData.tokens, totalEarn: userData.totalEarn, views: 0 });
+        tg.showAlert("৮ টোকেন যোগ হয়েছে!");
+        updateUI();
+    }
+
+    function runTimer(startTime) {
+        clearInterval(timerInt);
+        const target = startTime + (7 * 24 * 60 * 60 * 1000); 
+        timerInt = setInterval(() => {
+            const diff = target - Date.now();
+            if (diff <= 0) { document.getElementById('countdown').innerText = "SEASON STARTING!"; return; }
+            const d = Math.floor(diff / 86400000);
+            const h = Math.floor((diff % 86400000) / 3600000);
+            const m = Math.floor((diff % 3600000) / 60000);
+            const s = Math.floor((diff % 60000) / 1000);
+            document.getElementById('countdown').innerText = `${d}d ${h}h ${m}m ${s}s`;
+        }, 1000);
+    }
+
+    function updateUI() {
+        if(!currentMobile) return;
+        document.getElementById('token-val').innerText = (userData.tokens || 0).toFixed(1);
+        document.getElementById('taka-val').innerText = ((userData.tokens || 0) / 80).toFixed(2);
+        document.getElementById('lvl-val').innerText = (userData.level || 1);
+        document.getElementById('view-stats').innerText = `${userData.views || 0} / 12 সম্পন্ন`;
+        document.getElementById('progress-bar').style.width = ((userData.views || 0) / 12 * 100) + "%";
+        
+        const isFull = (userData.views >= 12);
+        document.getElementById('wheel-box').style.display = isFull ? 'block' : 'none';
+        document.getElementById('ad-btn').style.display = isFull ? 'none' : 'block';
+    }
+
+    function loadUsers() {
+        db.ref('users').once('value', (snap) => {
+            const box = document.getElementById('user-list-box');
+            box.innerHTML = "";
+            if(snap.exists()){
+                const users = snap.val();
+                for(let id in users){
+                    const u = users[id];
+                    box.innerHTML += `<div class="user-item"><span><b>${u.name}</b><br>${u.mobile}</span><span>Tok: ${(u.tokens || 0).toFixed(1)}<br><button onclick="editTok('${id}',${u.tokens})">Edit</button></span></div>`;
+                }
+            }
+        });
+    }
+
+    function editTok(id, t) {
+        const nt = prompt("টোকেন সংখ্যা:", t);
+        if(nt) db.ref('users/' + id).update({ tokens: parseFloat(nt) }).then(() => loadUsers());
+    }
+
+    function toggleGameStatus() {
+        const status = !settings.gameClosed;
+        db.ref('settings').update({ gameClosed: status, closeStartTime: status ? firebase.database.ServerValue.TIMESTAMP : 0 });
+    }
+
+    function toggleWD() { db.ref('settings/missionComplete').set(!settings.missionComplete); }
+    function updateSettings(key, id) { 
+        const val = document.getElementById(id).value;
+        if(val) db.ref('settings/' + key).set(val).then(() => alert("Saved!")); 
+    }
+
+    function showPage(id) {
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+        if(id === 'admin-page') loadUsers();
+    }
+
+    function copyRef() {
+        const link = document.getElementById('ref-link').innerText;
+        const el = document.createElement('textarea'); el.value = link; document.body.appendChild(el); el.select();
+        document.execCommand('copy'); document.body.removeChild(el); tg.showAlert("লিংক কপি হয়েছে!");
+    }
+
+    function goAdmin() { if(prompt("Code:") === "5229") showPage('admin-page'); }
+
+    db.ref('settings').on('value', (snapshot) => {
+        if(snapshot.exists()){
+            settings = snapshot.val();
+            document.getElementById('notice-text').innerText = settings.notice || "টাস্ক পূরণ করে আয় করুন!";
+            document.getElementById('ref-link').innerText = `https://t.me/${settings.botName || 'Bot'}/app?startapp=${currentMobile || 'user'}`;
+            if (settings.gameClosed) {
+                document.getElementById('timer-box').style.display = 'block';
+                document.getElementById('task-section').style.display = 'none';
+                if(settings.closeStartTime) runTimer(settings.closeStartTime);
+            } else {
+                document.getElementById('timer-box').style.display = 'none';
+                document.getElementById('task-section').style.display = 'block';
+                clearInterval(timerInt);
+            }
+            updateUI();
+        }
+    });
+
+    if (currentMobile) {
+        db.ref('users/' + currentMobile).on('value', (snap) => { if (snap.exists()) { userData = snap.val(); updateUI(); } });
+        db.ref('users/' + currentMobile).once('value', (snap) => { if (snap.exists()) { loginSuccess(currentMobile); } else { showPage('reg-page'); } });
+    } else { showPage('reg-page'); }
+
+    setTimeout(() => {
+        document.getElementById('loading-screen').style.display = 'none';
+        document.getElementById('main-content').style.display = 'block';
+    }, 1500);
+
+</script>
+
+</body>
+</html>
