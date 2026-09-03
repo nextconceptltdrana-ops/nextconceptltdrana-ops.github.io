@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Earn Pro - Fixed Connection</title>
+    
+    <meta name="monetag" content="713c462f8287529e227a1dc55fdecd73">
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+    <style>
+        :root {
+            --tg-bg: var(--tg-theme-bg-color, #ffffff);
+            --tg-text: var(--tg-theme-text-color, #222222);
+            --tg-btn: var(--tg-theme-button-color, #2481cc);
+            --tg-btn-text: var(--tg-theme-button-text-color, #ffffff);
+            --secondary-bg: var(--tg-theme-secondary-bg-color, #f0f2f5);
+        }
+
+        body { font-family: 'Segoe UI', sans-serif; background-color: var(--tg-bg); color: var(--tg-text); margin: 0; padding: 0; text-align: center; }
+        .container { padding: 15px; max-width: 500px; margin: auto; }
+        .page { display: none; }
+        .active { display: block; }
+        .card { background: var(--secondary-bg); padding: 20px; border-radius: 15px; margin-bottom: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); text-align: left; }
+        
+        .token-display { background: linear-gradient(135deg, #FFD700, #FFA500); color: #000; padding: 20px; border-radius: 15px; margin-bottom: 15px; border: 2px solid #fff; text-align: center;}
+        .token-count { font-size: 35px; font-weight: bold; display: block; }
+        
+        input { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ccc; border-radius: 8px; box-sizing: border-box; }
+        button { width: 100%; padding: 15px; background: var(--tg-btn); color: var(--tg-btn-text); border: none; border-radius: 10px; font-weight: bold; cursor: pointer; }
+        
+        .progress-container { background: #ddd; height: 12px; border-radius: 10px; margin: 10px 0; overflow: hidden; }
+        .progress-fill { background: #4caf50; width: 0%; height: 100%; transition: 0.3s; }
+        #wheel { width: 140px; height: 140px; border-radius: 50%; border: 4px solid #333; margin: 15px auto; transition: transform 3s cubic-bezier(0.17, 0.67, 0.12, 0.99); background: conic-gradient(#f44336 0% 25%, #ffeb3b 25% 50%, #2196f3 50% 75%, #4caf50 75% 100%); }
+        .locked-msg { color: #f44336; font-weight: bold; text-align: center; padding: 10px; border: 1px dashed #f44336; border-radius: 10px; background: #ffebee; }
+        #loading { padding: 50px; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div id="loading">অ্যাপ ডাটাবেসের সাথে কানেক্ট হচ্ছে... <br><small>দয়া করে কয়েক সেকেন্ড অপেক্ষা করুন</small></div>
+
+<div class="container" id="main-content" style="display: none;">
+
+    <div id="reg-page" class="page">
+        <div class="card" style="text-align: center;">
+            <h2>রেজিস্ট্রেশন</h2>
+            <input type="text" id="u-name" placeholder="নাম">
+            <input type="tel" id="u-mobile" placeholder="মোবাইল নম্বর">
+            <input type="password" id="u-pin" placeholder="৪ ডিজিট পিন" maxlength="4">
+            <button onclick="handleRegister()">শুরু করুন</button>
+        </div>
+    </div>
+
+    <div id="dash-page" class="page">
+        <div id="notice-text" class="card" style="background:#fff9c4; font-size:12px; font-weight:bold; text-align:center;">নোটিশ লোড হচ্ছে...</div>
+
+        <div class="token-display">
+            <small>মোট ব্যালেন্স</small>
+            <span class="token-count" id="token-val">0</span>
+            <div style="display: flex; justify-content: space-between; margin-top: 5px; font-size: 13px; font-weight: bold;">
+                <span>৳ <b id="taka-val">0.00</b></span>
+                <span>লেভেল: <b id="lvl-val">1</b></span>
+            </div>
+        </div>
+
+        <div class="card" style="text-align: center;">
+            <h3>ভিডিও টাস্ক (১২টি)</h3>
+            <div class="progress-container"><div id="progress-bar" class="progress-fill"></div></div>
+            <p id="view-stats">0 / 12 সম্পন্ন</p>
+            <button id="ad-btn" onclick="watchVideoAd()">ভিডিও দেখুন (Ad)</button>
+
+            <div id="wheel-box" style="display: none; margin-top: 15px;">
+                <div id="wheel"></div>
+                <button id="spin-btn" onclick="handleSpin()">স্পিন করে ৮ টোকেন নিন</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <h4>💰 উইথড্র সেকশন</h4>
+            <div id="wd-locked" class="locked-msg">মিশন চলছে! অ্যাডমিন উইথড্র চালু করলে এখানে ফর্ম আসবে।</div>
+            <div id="wd-unlocked" style="display: none; text-align:center;">
+                <input type="number" id="wd-amt" placeholder="টাকার পরিমাণ">
+                <input type="tel" id="wd-num" placeholder="নম্বর">
+                <button onclick="alert('রিকোয়েস্ট পাঠানো হয়েছে!')" style="background:#e91e63;">উইথড্র রিকোয়েস্ট</button>
+            </div>
+        </div>
+
+        <div style="margin-top: 20px; font-size: 11px; opacity: 0.3; cursor: pointer;" onclick="goAdmin()">Admin Panel</div>
+    </div>
+
+    <div id="admin-page" class="page">
+        <div class="card">
+            <h3>অ্যাডমিন কন্ট্রোল</h3>
+            <button onclick="toggleMission()" style="background:green; margin-bottom:10px;">মিশন স্ট্যাটাস পরিবর্তন</button>
+            <input type="text" id="new-notice" placeholder="নতুন নোটিশ">
+            <button onclick="updateNotice()">Update Notice</button>
+            <button onclick="showPage('dash-page')" style="background:#666; margin-top:10px;">ড্যাশবোর্ডে ফিরুন</button>
+        </div>
+    </div>
+
+</div>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getDatabase, ref, set, get, child, update, onValue } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+    // আপনার Singapore ডাটাবেসের জন্য databaseURL সহ কনফিগারেশন
+    const firebaseConfig = {
+        apiKey: "AIzaSyAy-ogRVGaUbTJSmy1oZau2fD8WPj-C6xQ",
+        authDomain: "garments-hero-apps-mini.firebaseapp.com",
+        databaseURL: "https://garments-hero-apps-mini-default-rtdb.asia-southeast1.firebasedatabase.app",
+        projectId: "garments-hero-apps-mini",
+        storageBucket: "garments-hero-apps-mini.firebasestorage.app",
+        messagingSenderId: "876997460555",
+        appId: "1:876997460555:web:bef4562686d791022243ce"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+    const tg = window.Telegram.WebApp;
+
+    const userId = tg.initDataUnsafe.user ? tg.initDataUnsafe.user.id.toString() : "debug_user";
+    let userData = {};
+    let isWDOpen = false;
+
+    async function init() {
+        try {
+            const snapshot = await get(child(ref(db), `users/${userId}`));
+            if (snapshot.exists()) {
+                userData = snapshot.val();
+                showPage('dash-page');
+            } else {
+                showPage('reg-page');
+            }
+            
+            // রিয়েলটাইম নোটিশ ও উইথড্র চেক
+            onValue(ref(db, 'settings'), (snap) => {
+                if(snap.exists()){
+                    const s = snap.val();
+                    isWDOpen = s.missionComplete || false;
+                    document.getElementById('notice-text').innerText = s.notice || "টাস্ক পূরণ করুন!";
+                    document.getElementById('wd-locked').style.display = isWDOpen ? 'none' : 'block';
+                    document.getElementById('wd-unlocked').style.display = isWDOpen ? 'block' : 'none';
+                }
+            });
+
+            updateUI();
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('main-content').style.display = 'block';
+        } catch (e) {
+            console.error(e);
+            alert("ডাটাবেস কানেকশন এরর! আপনার Rules এবং Config চেক করুন।");
+        }
+    }
+
+    window.handleRegister = async () => {
+        const n = document.getElementById('u-name').value;
+        const m = document.getElementById('u-mobile').value;
+        if (n && m) {
+            userData = { name: n, mobile: m, tokens: 0, level: 1, views: 0 };
+            await set(ref(db, 'users/' + userId), userData);
+            showPage('dash-page');
+            updateUI();
+        }
+    };
+
+    window.watchVideoAd = () => {
+        tg.openLink("https://www.profitableratecpmnetwork.com/d1i4k4nb?key=5fbc6b93ccb5d9851c59b8aceb5fae18");
+        tg.showConfirm("অ্যাড দেখেছেন?", async (ok) => {
+            if (ok) {
+                userData.views++;
+                if (userData.views >= 12) {
+                    document.getElementById('wheel-box').style.display = 'block';
+                    document.getElementById('ad-btn').disabled = true;
+                }
+                updateUI();
+                await update(ref(db, 'users/' + userId), { views: userData.views });
+            }
+        });
+    };
+
+    window.handleSpin = () => {
+        const wheel = document.getElementById('wheel');
+        wheel.style.transform = `rotate(${Math.floor(3000 + Math.random() * 3000)}deg)`;
+        document.getElementById('spin-btn').disabled = true;
+        setTimeout(async () => {
+            userData.level++; userData.tokens += 8; userData.views = 0;
+            tg.showAlert("আপনি ৮ টোকেন পেয়েছেন!");
+            document.getElementById('wheel-box').style.display = 'none';
+            document.getElementById('ad-btn').disabled = false;
+            document.getElementById('spin-btn').disabled = false;
+            wheel.style.transform = 'rotate(0deg)';
+            updateUI();
+            await update(ref(db, 'users/' + userId), userData);
+        }, 3500);
+    };
+
+    function updateUI() {
+        document.getElementById('token-val').innerText = (userData.tokens || 0);
+        document.getElementById('taka-val').innerText = ((userData.tokens || 0) / 80).toFixed(2);
+        document.getElementById('lvl-val').innerText = (userData.level || 1);
+        document.getElementById('name-val').innerText = userData.name || "ইউজার";
+        document.getElementById('view-stats').innerText = `${userData.views || 0} / 12 সম্পন্ন`;
+        document.getElementById('progress-bar').style.width = ((userData.views || 0) / 12 * 100) + "%";
+    }
+
+    window.showPage = (id) => {
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+    };
+
+    window.goAdmin = () => { if(prompt("Code:") === "5229") showPage('admin-page'); };
+    window.toggleMission = async () => { await update(ref(db, 'settings'), { missionComplete: !isWDOpen }); };
+    window.updateNotice = async () => { await update(ref(db, 'settings'), { notice: document.getElementById('new-notice').value }); };
+
+    init();
+</script>
+</body>
+</html>
