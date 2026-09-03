@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Earn Pro - Final Stable Edition</title>
+    
+    <meta name="monetag" content="713c462f8287529e227a1dc55fdecd73">
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+    <style>
+        :root {
+            --tg-bg: var(--tg-theme-bg-color, #ffffff);
+            --tg-text: var(--tg-theme-text-color, #222222);
+            --tg-btn: var(--tg-theme-button-color, #2481cc);
+            --tg-btn-text: var(--tg-theme-button-text-color, #ffffff);
+            --secondary-bg: var(--tg-theme-secondary-bg-color, #f0f2f5);
+        }
+        body { font-family: 'Segoe UI', sans-serif; background-color: var(--tg-bg); color: var(--tg-text); margin: 0; padding: 0; text-align: center; }
+        .container { padding: 15px; max-width: 500px; margin: auto; }
+        .page { display: none; padding-bottom: 50px; }
+        .active { display: block; }
+        .card { background: var(--secondary-bg); padding: 20px; border-radius: 15px; margin-bottom: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); text-align: left; color: #000; }
+        
+        .token-display { background: linear-gradient(135deg, #FFD700, #FFA500); color: #000; padding: 20px; border-radius: 15px; margin-bottom: 15px; border: 2px solid #fff; text-align: center;}
+        .token-count { font-size: 35px; font-weight: bold; display: block; }
+        
+        input { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ccc; border-radius: 8px; box-sizing: border-box; }
+        button { width: 100%; padding: 15px; background: var(--tg-btn); color: var(--tg-btn-text); border: none; border-radius: 10px; font-weight: bold; cursor: pointer; }
+        
+        .progress-container { background: #ddd; height: 14px; border-radius: 10px; margin: 10px 0; overflow: hidden; }
+        .progress-fill { background: #4caf50; width: 0%; height: 100%; transition: 0.5s; }
+        
+        .user-item { background: #fff; padding: 10px; border-radius: 10px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #ddd; font-size: 13px; color: #000; }
+        #loading { padding: 100px 20px; font-weight: bold; font-size: 18px; color: var(--tg-text); }
+        .ad-slot { margin: 10px 0; min-height: 50px; background: #eee; border-radius: 10px; display: flex; align-items: center; justify-content: center; overflow: hidden;}
+    </style>
+</head>
+<body>
+
+<div id="loading">ডাটাবেসে কানেক্ট হচ্ছে... <br><small>দয়া করে অপেক্ষা করুন</small></div>
+
+<div class="container" id="main-content" style="display: none;">
+
+    <!-- রেজিস্ট্রেশন -->
+    <div id="reg-page" class="page">
+        <div class="card" style="text-align: center;">
+            <h2 style="margin:0;">রেজিস্ট্রেশন</h2>
+            <input type="text" id="u-name" placeholder="আপনার নাম">
+            <input type="tel" id="u-mobile" placeholder="মোবাইল নম্বর">
+            <input type="password" id="u-pin" placeholder="৪ ডিজিট পিন" maxlength="4">
+            <button onclick="handleRegister()">শুরু করুন</button>
+        </div>
+    </div>
+
+    <!-- ড্যাশবোর্ড -->
+    <div id="dash-page" class="page">
+        <!-- Banner Ad -->
+        <div class="ad-slot">
+            <script type="text/javascript">
+                atOptions = { 'key' : '22791b3315db724a6660643268b32cc2', 'format' : 'iframe', 'height' : 50, 'width' : 320, 'params' : {} };
+            </script>
+            <script type="text/javascript" src="//www.highrevenueformat.com/22791b3315db724a6660643268b32cc2/invoke.js"></script>
+        </div>
+
+        <div id="notice-text" class="card" style="background:#fff9c4; font-size:12px; font-weight:bold; text-align:center; color:#856404;">টাস্ক পূরণ করে ইনকাম করুন!</div>
+
+        <div class="token-display">
+            <small>মোট ব্যালেন্স</small>
+            <span class="token-count" id="token-val">0</span>
+            <div style="display: flex; justify-content: space-between; margin-top: 5px; font-weight: bold; font-size: 14px;">
+                <span>৳ <b id="taka-val">0.00</b> Taka</span>
+                <span>লেভেল: <b id="lvl-val">1</b></span>
+            </div>
+        </div>
+
+        <div class="card" style="text-align: center;">
+            <h3 style="margin:0;">ভিডিও টাস্ক (১২টি)</h3>
+            <div class="progress-container"><div id="progress-bar" class="progress-fill"></div></div>
+            <p id="view-stats" style="font-weight:bold; margin-bottom: 10px;">0 / 12 সম্পন্ন</p>
+            <button id="ad-btn" onclick="watchVideoAd()">ভিডিও অ্যাড দেখুন</button>
+
+            <div id="wheel-box" style="display: none; margin-top: 15px;">
+                <p style="margin-bottom:10px;">বোনাস স্পিন করুন 🎡</p>
+                <button id="spin-btn" onclick="handleSpin()">৮ টোকেন দাবি করুন</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <h4>👫 রেফারেল লিংক</h4>
+            <div id="ref-link" style="background:#fff; padding:8px; border:1px solid #ccc; font-size:10px; word-break:break-all; border-radius:5px; margin-bottom:10px;">Loading Link...</div>
+            <button onclick="copyRef()" style="background:#4caf50;">লিংক কপি করুন</button>
+        </div>
+
+        <div style="margin-top: 30px; font-size: 11px; opacity: 0.4; cursor: pointer;" onclick="goAdmin()">Admin Panel</div>
+    </div>
+
+    <!-- অ্যাডমিন প্যানেল -->
+    <div id="admin-page" class="page">
+        <div class="card" style="background: #e1f5fe;">
+            <h3>Admin Panel</h3>
+            <label>নোটিশ পরিবর্তন:</label>
+            <input type="text" id="adm-notice" placeholder="নতুন নোটিশ">
+            <button onclick="updateSettings('notice', 'adm-notice')">আপডেট নোটিশ</button>
+            
+            <label style="margin-top:10px; display:block;">বট ইউজারনেম (অটো লিংক):</label>
+            <input type="text" id="adm-bot" placeholder="যেমন: MyEarnBot">
+            <button onclick="updateSettings('botName', 'adm-bot')" style="background:#1565c0;">বট সেট করুন</button>
+
+            <button onclick="toggleMission()" id="m-btn" style="background:orange; margin-top:15px;">উইথড্র অন/অফ</button>
+            <hr>
+            <h4>ইউজার লিস্ট</h4>
+            <div id="user-list">লোড হচ্ছে...</div>
+            <button onclick="showPage('dash-page')" style="background:#666; margin-top:20px;">ড্যাশবোর্ডে ফিরুন</button>
+        </div>
+    </div>
+
+</div>
+
+<!-- Firebase App & Database SDK (v10.7.1) -->
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getDatabase, ref, set, get, child, update, onValue, increment } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyAy-ogRVGaUbTJSmy1oZau2fD8WPj-C6xQ",
+        authDomain: "garments-hero-apps-mini.firebaseapp.com",
+        databaseURL: "https://garments-hero-apps-mini-default-rtdb.asia-southeast1.firebasedatabase.app",
+        projectId: "garments-hero-apps-mini",
+        storageBucket: "garments-hero-apps-mini.firebasestorage.app",
+        messagingSenderId: "876997460555",
+        appId: "1:876997460555:web:bef4562686d791022243ce"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+    const tg = window.Telegram.WebApp;
+    tg.expand();
+
+    const userId = (tg.initDataUnsafe && tg.initDataUnsafe.user) ? tg.initDataUnsafe.user.id.toString() : "guest_" + Math.floor(Math.random()*1000);
+    let userData = {};
+    let settings = { botName: "Bot", notice: "", missionComplete: false };
+
+    // ফাংশনগুলো গ্লোবাল উইন্ডোতে এক্সপোর্ট করা
+    window.handleRegister = async () => {
+        const n = document.getElementById('u-name').value;
+        const m = document.getElementById('u-mobile').value;
+        const p = document.getElementById('u-pin').value;
+        const refId = tg.initDataUnsafe.start_param || null;
+
+        if (n && m && p.length === 4) {
+            userData = { name: n, mobile: m, tokens: 0, level: 1, views: 0, refBy: refId, totalEarn: 0 };
+            await set(ref(db, 'users/' + userId), userData);
+            if(refId && refId !== userId) {
+                await update(ref(db, `users/${refId}`), { tokens: increment(400) });
+            }
+            window.showPage('dash-page');
+            updateUI();
+        } else {
+            tg.showAlert("সব তথ্য দিন (পিন ৪ ডিজিট)!");
+        }
+    };
+
+    window.watchVideoAd = () => {
+        tg.openLink("https://www.profitableratecpmnetwork.com/d1i4k4nb?key=5fbc6b93ccb5d9851c59b8aceb5fae18");
+        tg.showConfirm("বিজ্ঞাপন দেখেছেন?", async (ok) => {
+            if (ok) {
+                userData.views = (userData.views || 0) + 1;
+                if (userData.views >= 12) {
+                    document.getElementById('wheel-box').style.display = 'block';
+                    document.getElementById('ad-btn').style.display = 'none';
+                }
+                updateUI();
+                await update(ref(db, 'users/' + userId), { views: userData.views });
+            }
+        });
+    };
+
+    window.handleSpin = () => {
+        const btn = document.getElementById('spin-btn');
+        btn.disabled = true;
+        setTimeout(async () => {
+            userData.level++; userData.tokens += 8; userData.totalEarn += 8; userData.views = 0;
+            if(userData.refBy && userData.totalEarn >= 40000) {
+                await update(ref(db, `users/${userData.refBy}`), { tokens: increment(0.4) });
+            }
+            tg.showAlert("অভিনন্দন! আপনি ৮ টোকেন পেয়েছেন।");
+            document.getElementById('wheel-box').style.display = 'none';
+            document.getElementById('ad-btn').style.display = 'block';
+            btn.disabled = false;
+            updateUI();
+            await update(ref(db, 'users/' + userId), userData);
+        }, 2500);
+    };
+
+    window.updateSettings = async (key, inputId) => {
+        const val = document.getElementById(inputId).value;
+        if(val) {
+            await update(ref(db, 'settings'), { [key]: val });
+            alert("সফলভাবে আপডেট হয়েছে!");
+        }
+    };
+
+    window.toggleMission = async () => {
+        await update(ref(db, 'settings'), { missionComplete: !settings.missionComplete });
+    };
+
+    window.editUser = async (id, t, l) => {
+        const nt = prompt("নতুন টোকেন:", t);
+        const nl = prompt("নতুন লেভেল:", l);
+        if(nt !== null && nl !== null) {
+            await update(ref(db, `users/${id}`), { tokens: parseFloat(nt), level: parseInt(nl) });
+            window.loadUsers();
+        }
+    };
+
+    window.loadUsers = async () => {
+        const snap = await get(child(ref(db), 'users'));
+        const list = document.getElementById('user-list');
+        list.innerHTML = "";
+        if(snap.exists()){
+            const users = snap.val();
+            for(let id in users){
+                const u = users[id];
+                const div = document.createElement('div');
+                div.className = "user-item";
+                div.innerHTML = `<span><b>${u.name || 'User'}</b><br>${u.mobile || ''}</span>
+                <span>${(u.tokens || 0).toFixed(1)} Tok | Lvl ${u.level || 1}<br><button style="background:#333;color:#fff;padding:2px 5px;font-size:10px;border-radius:3px;" onclick="editUser('${id}', ${u.tokens}, ${u.level})">Edit</button></span>`;
+                list.appendChild(div);
+            }
+        }
+    };
+
+    window.showPage = (id) => {
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+        if(id === 'admin-page') window.loadUsers();
+    };
+
+    window.copyRef = () => {
+        const link = document.getElementById('ref-link').innerText;
+        navigator.clipboard.writeText(link);
+        tg.showAlert("লিংক কপি হয়েছে!");
+    };
+
+    window.goAdmin = () => { if(prompt("Admin Code:") === "5229") window.showPage('admin-page'); };
+
+    function updateUI() {
+        document.getElementById('token-val').innerText = (userData.tokens || 0).toFixed(1);
+        document.getElementById('taka-val').innerText = ((userData.tokens || 0) / 80).toFixed(2);
+        document.getElementById('lvl-val').innerText = (userData.level || 1);
+        document.getElementById('name-val').innerText = (userData.name || "User");
+        document.getElementById('view-stats').innerText = `${userData.views || 0} / 12 সম্পন্ন`;
+        document.getElementById('progress-bar').style.width = ((userData.views || 0) / 12 * 100) + "%";
+    }
+
+    // অ্যাপ শুরু করার মেইন ফাংশন
+    const initApp = async () => {
+        try {
+            const snapshot = await get(child(ref(db), `users/${userId}`));
+            if (snapshot.exists()) {
+                userData = snapshot.val();
+                window.showPage('dash-page');
+            } else {
+                window.showPage('reg-page');
+            }
+
+            onValue(ref(db, 'settings'), (snapshot) => {
+                if(snapshot.exists()) {
+                    settings = snapshot.val();
+                    document.getElementById('ref-link').innerText = `https://t.me/${settings.botName || 'Bot'}/app?startapp=${userId}`;
+                    document.getElementById('notice-text').innerText = settings.notice || "টাস্ক পূরণ করুন এবং ইনকাম করুন!";
+                    document.getElementById('m-btn').innerText = settings.missionComplete ? "উইথড্র বন্ধ করুন" : "উইথড্র চালু করুন";
+                    document.getElementById('m-btn').style.background = settings.missionComplete ? "red" : "green";
+                }
+            });
+
+            updateUI();
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('main-content').style.display = 'block';
+        } catch (error) {
+            console.error(error);
+            document.getElementById('loading').innerText = "কানেকশন এরর! ডাটাবেস রুলস চেক করুন।";
+        }
+    };
+
+    initApp();
+</script>
+
+<!-- Adsterra সোশ্যাল বার এবং পপ-আন্ডার -->
+<script type='text/javascript' src='https://pl31153985.profitableratecpmnetwork.com/ea/0c/49/ea0c49d2fd8eb9b2b97b344ec7a2de5d.js'></script>
+<script type='text/javascript' src='https://pl31153986.profitableratecpmnetwork.com/06/fc/7b/06fc7b4b1cfbfb2b527a9f3efe47887d.js'></script>
+<!-- Monetag Smart Tag -->
+<script src="https://alwingulla.com/88/p.js?z=11711232" async data-cfasync="false"></script>
+
+</body>
+</html>
