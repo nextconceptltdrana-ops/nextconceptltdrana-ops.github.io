@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <!-- Monetag Verification - এটি সবার উপরে থাকবে -->
+    <meta name="monetag" content="713c462f8287529e227a1dc55fdecd73">
+    
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Earn Pro - Final Connection</title>
+    
+    <!-- SDKs -->
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
+    <style>
+        :root {
+            --tg-bg: var(--tg-theme-bg-color, #1a202c);
+            --tg-text: var(--tg-theme-text-color, #ffffff);
+            --tg-btn: var(--tg-theme-button-color, #2481cc);
+            --tg-btn-text: var(--tg-theme-button-text-color, #ffffff);
+            --secondary-bg: var(--tg-theme-secondary-bg-color, #2d3748);
+        }
+        body { font-family: 'Segoe UI', sans-serif; background-color: var(--tg-bg); color: var(--tg-text); margin: 0; padding: 0; text-align: center; }
+        .container { padding: 15px; max-width: 500px; margin: auto; }
+        .page { display: none; padding-bottom: 50px; }
+        .active { display: block; }
+        .card { background: var(--secondary-bg); padding: 20px; border-radius: 15px; margin-bottom: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); text-align: left; color: #fff; }
+        .token-display { background: linear-gradient(135deg, #FFD700, #FFA500); color: #000; padding: 20px; border-radius: 15px; margin-bottom: 15px; border: 2px solid #fff; text-align: center;}
+        .token-count { font-size: 35px; font-weight: bold; display: block; }
+        input { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ccc; border-radius: 8px; box-sizing: border-box; font-size: 16px; background: #fff; color: #000; }
+        button { width: 100%; padding: 15px; background: var(--tg-btn); color: var(--tg-btn-text); border: none; border-radius: 10px; font-weight: bold; cursor: pointer; }
+        .progress-container { background: #4a5568; height: 14px; border-radius: 10px; margin: 10px 0; overflow: hidden; }
+        .progress-fill { background: #4caf50; width: 0%; height: 100%; transition: 0.5s; }
+        .timer-card { background: #1a1a1a; color: #fff; padding: 20px; border-radius: 15px; margin-bottom: 15px; border: 2px solid #FFD700; display: none; }
+        .user-item { background: #fff; padding: 10px; border-radius: 10px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; color: #000; font-size: 13px; }
+        #loading-screen { padding: 100px 20px; font-weight: bold; font-size: 18px; }
+        .ad-slot { margin: 10px 0; min-height: 55px; background: #eee; border-radius: 10px; overflow: hidden; display: flex; align-items: center; justify-content: center;}
+    </style>
+</head>
+<body>
+
+<div id="loading-screen">ডেটাবেসে কানেক্ট হচ্ছে... <br><small>দয়া করে অপেক্ষা করুন</small></div>
+
+<div class="container" id="main-content" style="display: none;">
+
+    <div id="reg-page" class="page">
+        <div class="card" style="text-align: center;">
+            <h2 style="margin:0;">একাউন্ট লগইন</h2>
+            <input type="text" id="u-name" placeholder="নাম">
+            <input type="tel" id="u-mobile" placeholder="মোবাইল নম্বর">
+            <input type="password" id="u-pin" placeholder="৪ ডিজিট পিন" maxlength="4">
+            <button onclick="handleAuth()">শুরু করুন</button>
+        </div>
+    </div>
+
+    <div id="dash-page" class="page">
+        <div class="ad-slot">
+            <script type="text/javascript">
+                atOptions = { 'key' : '22791b3315db724a6660643268b32cc2', 'format' : 'iframe', 'height' : 50, 'width' : 320, 'params' : {} };
+            </script>
+            <script type="text/javascript" src="//www.highrevenueformat.com/22791b3315db724a6660643268b32cc2/invoke.js"></script>
+        </div>
+
+        <div id="timer-box" class="timer-card">
+            <h4 style="margin:0; color: #ff4444;">SEASON CLOSED!</h4>
+            <div id="countdown" style="font-size: 24px; color: #FFD700;">00d 00h 00m 00s</div>
+        </div>
+
+        <div id="dynamic-tasks-area"></div>
+
+        <div class="token-display">
+            <small>মোট ব্যালেন্স</small>
+            <span class="token-count" id="token-val">0.0</span>
+            <div style="display: flex; justify-content: space-between; margin-top: 5px; font-weight: bold; font-size: 14px;">
+                <span>৳ <b id="taka-val">0.00</b></span>
+                <span>লেভেল: <b id="lvl-val">1</b></span>
+            </div>
+        </div>
+
+        <div id="task-section">
+            <div class="card" style="text-align: center;">
+                <h3 style="margin:0;">ভিডিও টাস্ক (১২টি)</h3>
+                <div class="progress-container"><div id="progress-bar" class="progress-fill"></div></div>
+                <p id="view-stats" style="font-weight:bold; margin-bottom: 15px;">0 / 12 সম্পন্ন</p>
+                <button id="ad-btn" onclick="watchAd()">ভিডিও দেখুন (Reward)</button>
+                <div id="wheel-box" style="display: none; margin-top: 15px;">
+                    <button id="spin-btn" onclick="handleSpin()" style="background: orange; width: 100%;">সংগ্রহ করুন ৮ টোকেন 🎡</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h4>👫 রেফারেল লিংক</h4>
+            <div id="ref-link" style="background:#fff; padding:8px; border:1px solid #ccc; font-size:10px; word-break:break-all; border-radius:5px; margin-bottom:10px; color:#000;">Loading...</div>
+            <button onclick="copyRef()" style="background:#4caf50;">লিংক কপি করুন</button>
+        </div>
+
+        <div style="margin-top: 20px; font-size: 11px; opacity: 0.3; cursor: pointer;" onclick="goAdmin()">Admin Panel</div>
+    </div>
+
+    <div id="admin-page" class="page">
+        <div class="card" style="background: #e1f5fe; color: #000;">
+            <h3>Admin Dashboard</h3>
+            <label>বট নাম (বিনা @):</label>
+            <input type="text" id="adm-bot" placeholder="যেমন: MyRobot">
+            <button onclick="updateSettings('botName', 'adm-bot')">বট সেট করুন</button>
+            <hr>
+            <button onclick="toggleGameStatus()" id="game-btn" style="background:red; margin-bottom: 10px;">Close Game (Timer)</button>
+            <input type="text" id="t-title" placeholder="টাস্ক নাম">
+            <input type="text" id="t-desc" placeholder="টাস্ক বর্ণনা">
+            <button onclick="addNewTask()" style="background: purple;">পাবলিশ টাস্ক</button>
+            <hr>
+            <div id="user-list-box">লোড হচ্ছে...</div>
+            <button onclick="showPage('dash-page')" style="background:#666; margin-top:20px;">বন্ধ করুন</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    const firebaseConfig = {
+        apiKey: "AIzaSyAy-ogRVGaUbTJSmy1oZau2fD8WPj-C6xQ",
+        authDomain: "garments-hero-apps-mini.firebaseapp.com",
+        databaseURL: "https://garments-hero-apps-mini-default-rtdb.asia-southeast1.firebasedatabase.app",
+        projectId: "garments-hero-apps-mini",
+        storageBucket: "garments-hero-apps-mini.firebasestorage.app",
+        messagingSenderId: "876997460555",
+        appId: "1:876997460555:web:bef4562686d791022243ce"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+    const tg = window.Telegram.WebApp;
+    tg.expand();
+
+    let currentMobile = localStorage.getItem('user_mobile');
+    let userData = { tokens: 0, level: 1, views: 0, tasks: {} };
+    let appSettings = { botName: "Bot", gameClosed: false, closeStartTime: 0, tasks: {} };
+    let timerInt;
+
+    async function handleAuth() {
+        const name = document.getElementById('u-name').value;
+        const mobile = document.getElementById('u-mobile').value;
+        const pin = document.getElementById('u-pin').value;
+        const refId = tg.initDataUnsafe.start_param || null;
+
+        if (name && mobile.length >= 10 && pin.length === 4) {
+            db.ref('users/' + mobile).once('value', async (snap) => {
+                if (snap.exists()) {
+                    const data = snap.val();
+                    if(data.pin === pin) { userData = data; login(mobile); } 
+                    else { alert("ভুল পিন!"); }
+                } else {
+                    userData = { name, mobile, pin, tokens: 0, level: 1, views: 0, refBy: refId, totalEarn: 0, tasks: {} };
+                    await db.ref('users/' + mobile).set(userData);
+                    if(refId && refId !== mobile) {
+                        db.ref('users/' + refId + '/tokens').set(firebase.database.ServerValue.increment(400));
+                    }
+                    login(mobile);
+                }
+            });
+        } else { alert("সঠিক তথ্য দিন।"); }
+    }
+
+    function login(mobile) {
+        localStorage.setItem('user_mobile', mobile);
+        currentMobile = mobile;
+        showPage('dash-page');
+        updateUI();
+        loadAds();
+    }
+
+    function watchAd() {
+        tg.openLink("https://www.profitableratecpmnetwork.com/d1i4k4nb?key=5fbc6b93ccb5d9851c59b8aceb5fae18");
+        setTimeout(() => {
+            tg.showConfirm("আপনি কি বিজ্ঞাপনটি সম্পূর্ণ দেখেছেন?", (ok) => {
+                if (ok) {
+                    userData.views = (userData.views || 0) + 1;
+                    db.ref('users/' + currentMobile + '/views').set(userData.views);
+                    updateUI();
+                }
+            });
+        }, 1500);
+    }
+
+    async function handleSpin() {
+        if(userData.views < 12) return;
+        const btn = document.getElementById('spin-btn');
+        btn.disabled = true;
+        btn.innerText = "সংগ্রহ হচ্ছে...";
+
+        userData.level++; userData.tokens += 8; userData.totalEarn += 8; userData.views = 0;
+        if(userData.refBy && userData.totalEarn >= 40000) {
+            db.ref('users/' + userData.refBy + '/tokens').set(firebase.database.ServerValue.increment(0.4));
+        }
+
+        await db.ref('users/' + currentMobile).update({ level: userData.level, tokens: userData.tokens, totalEarn: userData.totalEarn, views: 0 });
+        tg.showAlert("অভিনন্দন! ৮ টোকেন যোগ হয়েছে।");
+        updateUI();
+        btn.disabled = false;
+        btn.innerText = "সংগ্রহ করুন ৮ টোকেন 🎡";
+    }
+
+    function updateUI() {
+        if(!currentMobile) return;
+        document.getElementById('token-val').innerText = (userData.tokens || 0).toFixed(1);
+        document.getElementById('taka-val').innerText = ((userData.tokens || 0) / 80).toFixed(2);
+        document.getElementById('lvl-val').innerText = (userData.level || 1);
+        document.getElementById('view-stats').innerText = `${userData.views || 0} / 12 সম্পন্ন`;
+        document.getElementById('progress-bar').style.width = ((userData.views || 0) / 12 * 100) + "%";
+        
+        const isFull = (userData.views >= 12);
+        document.getElementById('wheel-box').style.display = isFull ? 'block' : 'none';
+        document.getElementById('ad-btn').style.display = isFull ? 'none' : 'block';
+
+        const area = document.getElementById('dynamic-tasks-area');
+        area.innerHTML = "";
+        if(appSettings.tasks) {
+            for(let tid in appSettings.tasks) {
+                const status = (userData.tasks && userData.tasks[tid]) ? userData.tasks[tid] : 'none';
+                if(status !== 'verified') {
+                    area.innerHTML += `<div class="card" style="background:#6a11cb; color:#fff; text-align:center;">
+                        <h4>${appSettings.tasks[tid].title}</h4><p>${appSettings.tasks[tid].desc}</p>
+                        <button onclick="subTask('${tid}')" ${status === 'pending' ? 'disabled' : ''} style="background:#fff; color:#6a11cb; padding:5px 15px; border-radius:10px;">${status === 'pending' ? 'Pending' : 'Done'}</button>
+                    </div>`;
+                }
+            }
+        }
+    }
+
+    function subTask(tid) { db.ref('users/' + currentMobile + '/tasks/' + tid).set('pending'); tg.showAlert("রিকোয়েস্ট পাঠানো হয়েছে।"); }
+
+    function addNewTask() {
+        const title = document.getElementById('t-title').value;
+        const desc = document.getElementById('t-desc').value;
+        if(title) db.ref('settings/tasks/' + Date.now()).set({ title, desc });
+    }
+
+    function toggleGameStatus() {
+        const status = !appSettings.gameClosed;
+        db.ref('settings').update({ gameClosed: status, closeStartTime: status ? firebase.database.ServerValue.TIMESTAMP : 0 });
+    }
+
+    function loadUsers() {
+        db.ref('users').once('value', (snap) => {
+            const box = document.getElementById('user-list-box');
+            box.innerHTML = "";
+            if(snap.exists()){
+                const users = snap.val();
+                for(let id in users){
+                    const u = users[id];
+                    let btn = "";
+                    if(u.tasks) {
+                        for(let tid in u.tasks) if(u.tasks[tid] === 'pending') btn += `<button onclick="verTask('${id}','${tid}')" style="background:purple;color:#fff;font-size:10px;">Verify</button>`;
+                    }
+                    box.innerHTML += `<div class="user-item"><span><b>${u.name}</b><br>${u.mobile}</span><span>Tok: ${(u.tokens || 0).toFixed(1)}<br>${btn}</span></div>`;
+                }
+            }
+        });
+    }
+
+    function verTask(uId, tId) { db.ref('users/' + uId + '/tasks/' + tId).set('verified').then(() => loadUsers()); }
+
+    function runTimer(startTime) {
+        clearInterval(timerInt);
+        const target = startTime + (7 * 24 * 60 * 60 * 1000); 
+        timerInt = setInterval(() => {
+            const diff = target - Date.now();
+            if (diff <= 0) { document.getElementById('countdown').innerText = "SEASON STARTING!"; return; }
+            const d = Math.floor(diff / 86400000);
+            const h = Math.floor((diff % 86400000) / 3600000);
+            const m = Math.floor((diff % 3600000) / 60000);
+            const s = Math.floor((diff % 60000) / 1000);
+            document.getElementById('countdown').innerText = `${d}d ${h}h ${m}s`;
+        }, 1000);
+    }
+
+    function showPage(id) {
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+        if(id === 'admin-page') loadUsers();
+    }
+
+    function updateSettings(key, id) { 
+        const val = document.getElementById(id).value;
+        if(val) db.ref('settings/' + key).set(val).then(() => alert("Saved!")); 
+    }
+
+    function copyRef() {
+        const link = document.getElementById('ref-link').innerText;
+        const el = document.createElement('textarea'); el.value = link; document.body.appendChild(el); el.select();
+        document.execCommand('copy'); document.body.removeChild(el); tg.showAlert("লিংক কপি হয়েছে!");
+    }
+
+    function goAdmin() { if(prompt("Code:") === "5229") showPage('admin-page'); }
+
+    function loadAds() {
+        const s = ["https://pl31153985.profitableratecpmnetwork.com/ea/0c/49/ea0c49d2fd8eb9b2b97b344ec7a2de5d.js", "https://pl31153986.profitableratecpmnetwork.com/06/fc/7b/06fc7b4b1cfbfb2b527a9f3efe47887d.js", "https://alwingulla.com/88/p.js?z=11711232"];
+        s.forEach(src => { let sc = document.createElement('script'); sc.src = src; sc.async = true; document.body.appendChild(sc); });
+    }
+
+    db.ref('settings').on('value', (snapshot) => {
+        if(snapshot.exists()){
+            appSettings = snapshot.val();
+            document.getElementById('notice-text').innerText = appSettings.notice || "টাস্ক পূরণ করে আয় করুন!";
+            document.getElementById('ref-link').innerText = `https://t.me/${appSettings.botName || 'Bot'}/app?startapp=${currentMobile || 'user'}`;
+            if (appSettings.gameClosed) {
+                document.getElementById('timer-box').style.display = 'block';
+                document.getElementById('task-section').style.display = 'none';
+                if(appSettings.closeStartTime) runTimer(appSettings.closeStartTime);
+            } else {
+                document.getElementById('timer-box').style.display = 'none';
+                document.getElementById('task-section').style.display = 'block';
+                clearInterval(timerInt);
+            }
+            updateUI();
+        }
+    });
+
+    if (currentMobile) {
+        db.ref('users/' + currentMobile).on('value', (snap) => { if (snap.exists()) { userData = snap.val(); updateUI(); } });
+        db.ref('users/' + currentMobile).once('value', (snap) => { if (snap.exists()) { login(currentMobile); } else { showPage('reg-page'); } });
+    } else { showPage('reg-page'); }
+
+    setTimeout(() => {
+        document.getElementById('loading-screen').style.display = 'none';
+        document.getElementById('main-content').style.display = 'block';
+    }, 1500);
+
+</script>
+</body>
+</html>
