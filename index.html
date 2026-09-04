@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Garments Hero Rewards - Mini App</title>
+    <!-- Telegram Web App SDK -->
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+    
+    <!-- Monetag Scripts -->
+    <script>(function(s){s.dataset.zone='11715396',s.src='https://al5sm.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
+    <script src="https://quge5.com/88/tag.min.js" data-zone="275995" async data-cfasync="false"></script>
+    <script>(function(s){s.dataset.zone='11715364',s.src='https://n6wxm.com/vignette.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background-color: #0f172a;
+            color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            justify-content: space-between;
+            align-items: center;
+        }
+        /* Top Banner Ad Area */
+        .banner-top {
+            width: 100%;
+            min-height: 50px;
+            background: #1e293b;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-bottom: 1px solid #334155;
+            overflow: hidden;
+        }
+        .main-container {
+            display: flex;
+            width: 100%;
+            flex: 1;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 500px;
+        }
+        .banner-side {
+            width: 40px;
+            background: #1e293b;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 9px;
+            color: #64748b;
+        }
+        .content-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 15px;
+            text-align: center;
+        }
+        /* App Header with 5-Click Secret Admin Trigger */
+        .app-header {
+            font-size: 18px;
+            font-weight: bold;
+            color: #38bdf8;
+            margin-bottom: 15px;
+            cursor: pointer;
+            user-select: none;
+        }
+        .stats-card {
+            background: #1e293b;
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            width: 100%;
+            border: 1px solid #334155;
+        }
+        .stats-card h2 {
+            font-size: 16px;
+            color: #38bdf8;
+            margin-bottom: 5px;
+        }
+        .stats-card p {
+            font-size: 13px;
+            color: #cbd5e1;
+            margin: 3px 0;
+        }
+        .btn-action {
+            background: #2563eb;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            font-size: 15px;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+            margin-bottom: 10px;
+            transition: background 0.3s;
+            z-index: 5;
+        }
+        .btn-action:active {
+            background: #1d4ed8;
+        }
+        .btn-secondary {
+            background: #475569;
+        }
+        #notification-box {
+            margin-top: 10px;
+            min-height: 25px;
+            font-size: 12px;
+            color: #4ade80;
+            font-weight: bold;
+        }
+        /* Notice & Task Board */
+        .notice-board {
+            background: #1e293b;
+            border: 1px solid #334155;
+            padding: 10px;
+            border-radius: 8px;
+            width: 100%;
+            margin-top: 10px;
+            font-size: 12px;
+            color: #facc15;
+            text-align: left;
+        }
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            padding: 20px;
+        }
+        .modal-content {
+            background: #1e293b;
+            padding: 20px;
+            border-radius: 12px;
+            width: 100%;
+            max-width: 400px;
+            border: 1px solid #334155;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        .modal-content h3 {
+            color: #38bdf8;
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+        .modal-content input, .modal-content textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            background: #0f172a;
+            border: 1px solid #334155;
+            color: white;
+            border-radius: 6px;
+            font-size: 13px;
+        }
+        .close-btn {
+            background: #ef4444;
+            margin-top: 5px;
+        }
+        .banner-bottom {
+            width: 100%;
+            min-height: 50px;
+            background: #1e293b;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-top: 1px solid #334155;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Top Banner Ad -->
+    <div class="banner-top">
+        <script>
+          atOptions = { 'key' : '22791b3315db724a6660643268b32cc2', 'format' : 'iframe', 'height' : 50, 'width' : 320, 'params' : {} };
+        </script>
+        <script src="https://www.highrevenueformat.com/22791b3315db724a6660643268b32cc2/invoke.js"></script>
+    </div>
+
+    <div class="main-container">
+        <div class="banner-side">Ad</div>
+
+        <div class="content-area">
+            <!-- 5-Click Secret Admin Trigger on Header Title -->
+            <div class="app-header" id="appHeader">Garments Hero Rewards</div>
+
+            <div class="stats-card">
+                <h2 id="levelText">Level: 1</h2>
+                <p id="progressText">Ads Watched: 0 / 12</p>
+                <p id="pointsText" style="color: #4ade80;">Points: 0</p>
+                <p id="refCountText">Referrals: 0</p>
+            </div>
+
+            <!-- Safe Watch Ad Button (Protected from overlaps) -->
+            <button class="btn-action" id="playBtn" onclick="watchAd()">Watch Ad to Progress</button>
+            <button class="btn-action btn-secondary" onclick="openWithdrawModal()">Withdraw Funds</button>
+            <button class="btn-action btn-secondary" onclick="getReferralLink()">Get Referral Link</button>
+            
+            <div id="notification-box"></div>
+
+            <!-- Live Notice & Task Board -->
+            <div class="notice-board" id="noticeBoard">
+                <b>📢 Live Notice & Task:</b> <span id="noticeText">Loading announcements...</span>
+            </div>
+        </div>
+
+        <div class="banner-side">Ad</div>
+    </div>
+
+    <!-- Bottom Banner Ad -->
+    <div class="banner-bottom">
+        <script>
+          atOptions = { 'key' : '132cbf6ba1e683adfcd45a7f9960a1f6', 'format' : 'iframe', 'height' : 250, 'width' : 300, 'params' : {} };
+        </script>
+        <script src="https://www.highrevenueformat.com/132cbf6ba1e683adfcd45a7f9960a1f6/invoke.js"></script>
+    </div>
+
+    <!-- Additional Adsterra Scripts -->
+    <script src="https://pl31153985.profitableratecpmnetwork.com/ea/0c/49/ea0c49d2fd8eb9b2b97b344ec7a2de5d.js"></script>
+    <script src="https://pl31153986.profitableratecpmnetwork.com/06/fc/7b/06fc7b4b1cfbfb2b527a9f3efe47887d.js"></script>
+
+    <!-- Withdraw Modal -->
+    <div class="modal" id="withdrawModal">
+        <div class="modal-content">
+            <h3>Request Withdrawal</h3>
+            <input type="text" id="payNumber" placeholder="Enter Bkash/Nagad Number">
+            <input type="number" id="payAmount" placeholder="Points to Withdraw">
+            <button class="btn-action" onclick="submitWithdraw()">Submit Request</button>
+            <button class="btn-action close-btn" onclick="closeModal('withdrawModal')">Close</button>
+        </div>
+    </div>
+
+    <!-- Secret Admin Modal -->
+    <div class="modal" id="adminModal">
+        <div class="modal-content">
+            <h3>🔐 Admin Panel (5229)</h3>
+            <p style="font-size:12px; margin-bottom:10px; color:#cbd5e1;">Pending Withdrawals & Management</p>
+            <div id="adminWithdrawList" style="max-height: 150px; overflow-y: auto; margin-bottom: 10px; font-size: 12px;"></div>
+            <hr style="border-color: #334155; margin: 10px 0;">
+            <textarea id="adminNoticeInput" placeholder="Write live notice or task message..."></textarea>
+            <button class="btn-action" onclick="updateAdminNotice()">Update Live Notice</button>
+            <button class="btn-action close-btn" onclick="closeModal('adminModal')">Close</button>
+        </div>
+    </div>
+
+    <script>
+        // Telegram WebApp Initialization
+        const tg = window.Telegram.WebApp;
+        tg.expand();
+        const user = tg.initDataUnsafe?.user;
+        const userId = user ? user.id.toString() : "guest_" + Math.floor(Math.random() * 100000);
+        const userName = user ? (user.first_name || "User") : "Guest";
+
+        // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyAy-ogRVGaUbTJSmy1oZau2fD8WPj-C6xQ",
+            authDomain: "garments-hero-apps-mini.firebaseapp.com",
+            databaseURL: "https://garments-hero-apps-mini-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "garments-hero-apps-mini",
+            storageBucket: "garments-hero-apps-mini.firebasestorage.app",
+            messagingSenderId: "876997460555",
+            appId: "1:876997460555:web:bef4562686d791022243ce",
+            measurementId: "G-623RYXLL8M"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+
+        let currentLevel = 1;
+        let adsWatched = 0;
+        let totalPoints = 0;
+        let referralCount = 0;
+        let referredBy = null;
+        let canWatchAd = true;
+
+        const userRef = db.ref('users/' + userId);
+
+        // Check URL for Referral parameter
+        const urlParams = new URLSearchParams(window.location.search);
+        const refParam = urlParams.get('start') || urlParams.get('ref');
+
+        // Initialize User Data
+        userRef.once('value', (snapshot) => {
+            const data = snapshot.val();
+            if (data) {
+                currentLevel = data.level || 1;
+                adsWatched = data.adsWatched || 0;
+                totalPoints = data.points || 0;
+                referralCount = data.referralCount || 0;
+            } else {
+                // New User Registration & Referral Processing
+                let initPoints = 1; // Welcome bonus
+                if (refParam && refParam !== userId) {
+                    referredBy = refParam;
+                    // Give 2 points to referrer instantly
+                    db.ref('users/' + refParam).transaction((refUser) => {
+                        if (refUser) {
+                            refUser.points = (refUser.points || 0) + 2;
+                            refUser.referralCount = (refUser.referralCount || 0) + 1;
+                        }
+                        return refUser;
+                    });
+                }
+                userRef.set({
+                    name: userName,
+                    level: 1,
+                    adsWatched: 0,
+                    points: initPoints,
+                    referralCount: 0,
+                    referredBy: referredBy || 'none'
+                });
+                totalPoints = initPoints;
+            }
+            updateUI();
+        });
+
+        // Realtime sync
+        userRef.on('value', (snapshot) => {
+            const data = snapshot.val();
+            if (data) {
+                currentLevel = data.level || 1;
+                adsWatched = data.adsWatched || 0;
+                totalPoints = data.points || 0;
+                referralCount = data.referralCount || 0;
+                updateUI();
+            }
+        });
+
+        function updateUI() {
+            document.getElementById('levelText').innerText = `Level: ${currentLevel}`;
+            document.getElementById('progressText').innerText = `Ads Watched: ${adsWatched} / 12`;
+            document.getElementById('pointsText').innerText = `Points: ${totalPoints}`;
+            document.getElementById('refCountText').innerText = `Referrals: ${referralCount}`;
+        }
+
+        function showNotification(msg) {
+            const box = document.getElementById('notification-box');
+            box.innerText = msg;
+            setTimeout(() => { box.innerText = ""; }, 4000);
+        }
+
+        // 3-Second Cooldown & Ad Logic
+        function watchAd() {
+            if (!canWatchAd) {
+                showNotification("Please wait a few seconds before watching the next ad!");
+                return;
+            }
+
+            canWatchAd = false;
+            document.getElementById('playBtn').style.opacity = "0.6";
+
+            adsWatched++;
+            let earnedPoints = 0;
+
+            if (adsWatched >= 12) {
+                adsWatched = 0;
+                if (currentLevel < 100000) {
+                    currentLevel++;
+                    earnedPoints = 12;
+                    showNotification("🎉 Level Complete! Points added.");
+                }
+            } else {
+                earnedPoints = 1;
+                showNotification(`Ad watched successfully! (${adsWatched}/12)`);
+            }
+
+            totalPoints += earnedPoints;
+
+            // 5% Commission Logic to Referrer
+            userRef.once('value', (snap) => {
+                const dat = snap.val();
+                if (dat && dat.referredBy && dat.referredBy !== 'none') {
+                    const commission = earnedPoints * 0.05;
+                    db.ref('users/' + dat.referredBy).transaction((refU) => {
+                        if (refU) refU.points = (refU.points || 0) + commission;
+                        return refU;
+                    });
+                }
+            });
+
+            // Update Firebase
+            userRef.update({
+                level: currentLevel,
+                adsWatched: adsWatched,
+                points: totalPoints
+            });
+
+            // 3 seconds cooldown
+            setTimeout(() => {
+                canWatchAd = true;
+                document.getElementById('playBtn').style.opacity = "1";
+            }, 3000);
+        }
+
+        function getReferralLink() {
+            const botUsername = "GHES1bot";
+            const refLink = `https://t.me/${botUsername}?start=${userId}`;
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(refLink);
+                showNotification("Referral link copied to clipboard!");
+            } else {
+                prompt("Copy your referral link:", refLink);
+            }
+        }
+
+        // Withdraw Functions
+        function openWithdrawModal() { document.getElementById('withdrawModal').style.display = 'flex'; }
+        function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+
+        function submitWithdraw() {
+            const num = document.getElementById('payNumber').value;
+            const amt = parseInt(document.getElementById('payAmount').value);
+            if (!num || !amt || amt < 10) {
+                alert("Enter valid number and minimum 10 points for withdrawal!");
+                return;
+            }
+            if (totalPoints < amt) {
+                alert("You do not have enough points!");
+                return;
+            }
+
+            // Deduct points and push request
+            totalPoints -= amt;
+            userRef.update({ points: totalPoints });
+
+            db.ref('withdrawRequests').push({
+                userId: userId,
+                name: userName,
+                number: num,
+                amount: amt,
+                status: 'Pending',
+                time: Date.now()
+            });
+
+            alert("Withdrawal request submitted successfully!");
+            closeModal('withdrawModal');
+        }
+
+        // 5-Click Secret Admin Panel Trigger
+        let clickCount = 0;
+        document.getElementById('appHeader').addEventListener('click', () => {
+            clickCount++;
+            if (clickCount === 5) {
+                clickCount = 0;
+                let pass = prompt("Enter Admin Secret Password:");
+                if (pass === "5229") {
+                    openAdminPanel();
+                } else {
+                    alert("Incorrect Password!");
+                }
+            }
+            setTimeout(() => { clickCount = 0; }, 3000); // Reset after 3 sec
+        });
+
+        function openAdminPanel() {
+            document.getElementById('adminModal').style.display = 'flex';
+            loadAdminWithdraws();
+        }
+
+        function loadAdminWithdraws() {
+            db.ref('withdrawRequests').on('value', (snapshot) => {
+                const list = document.getElementById('adminWithdrawList');
+                list.innerHTML = "";
+                snapshot.forEach((childSnap) => {
+                    const req = childSnap.val();
+                    const key = childSnap.key;
+                    if (req.status === 'Pending') {
+                        list.innerHTML += `<div>
+                            <b>${req.name}</b> (${req.number}) - <b>${req.amount} Pts</b>
+                            <button onclick="approveReq('${key}', ${req.amount}, '${req.userId}')" style="background:green;color:white;border:none;padding:2px 5px;cursor:pointer;">Approve</button>
+                        </div><hr>`;
+                    }
+                });
+            });
+        }
+
+        function approveReq(key, amt, targetUser) {
+            db.ref('withdrawRequests/' + key).update({ status: 'Approved' });
+            alert("Request Approved!");
+        }
+
+        // Live Notice & Tasks
+        db.ref('settings/liveNotice').on('value', (snap) => {
+            if (snap.exists()) {
+                document.getElementById('noticeText').innerText = snap.val();
+            } else {
+                document.getElementById('noticeText').innerText = "Welcome to Garments Hero Rewards! Watch ads daily to earn points.";
+            }
+        });
+
+        function updateAdminNotice() {
+            const newNotice = document.getElementById('adminNoticeInput').value;
+            if (newNotice) {
+                db.ref('settings/liveNotice').set(newNotice);
+                alert("Live notice updated successfully!");
+            }
+        }
+    </script>
+</body>
+</html>
