@@ -1,0 +1,1623 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#0f172a">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+
+  <title>Garments Hero</title>
+
+  <!-- Telegram Mini App -->
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+  <!-- =========================
+       YOUR AD UNIT #1
+  ========================== -->
+  <script src="https://pl31153986.profitableratecpmnetwork.com/06/fc/7b/06fc7b4b1cfbfb2b527a9f3efe47887d.js"></script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      padding: 0 0 90px 0;
+      background: #f1f5f9;
+      color: #0f172a;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    button,
+    input,
+    select {
+      font-family: inherit;
+    }
+
+    .app {
+      width: 100%;
+      max-width: 650px;
+      margin: auto;
+    }
+
+    /* =========================
+       HEADER
+    ========================== */
+
+    .hero-header {
+      background: linear-gradient(135deg, #0f172a, #1d4ed8);
+      color: white;
+      padding: 20px 16px 22px;
+      border-radius: 0 0 26px 26px;
+      box-shadow: 0 5px 20px rgba(0,0,0,.15);
+    }
+
+    .profile-row {
+      display: flex;
+      align-items: center;
+      gap: 13px;
+    }
+
+    .profile-photo {
+      width: 58px;
+      height: 58px;
+      border-radius: 50%;
+      object-fit: cover;
+      background: rgba(255,255,255,.18);
+      border: 2px solid rgba(255,255,255,.6);
+    }
+
+    .profile-placeholder {
+      width: 58px;
+      height: 58px;
+      border-radius: 50%;
+      background: rgba(255,255,255,.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      border: 2px solid rgba(255,255,255,.35);
+    }
+
+    .brand {
+      font-size: 25px;
+      font-weight: 800;
+      line-height: 1.1;
+    }
+
+    .tagline {
+      margin-top: 5px;
+      font-size: 14px;
+      opacity: .9;
+    }
+
+    .coin-box {
+      margin-top: 17px;
+      padding: 14px;
+      border-radius: 17px;
+      background: rgba(255,255,255,.13);
+      border: 1px solid rgba(255,255,255,.18);
+    }
+
+    .coin-label {
+      font-size: 12px;
+      opacity: .85;
+    }
+
+    .coin-value {
+      margin-top: 3px;
+      font-size: 27px;
+      font-weight: 800;
+    }
+
+    /* =========================
+       ADS
+    ========================== */
+
+    .ad-box {
+      background: white;
+      margin: 12px;
+      padding: 10px;
+      min-height: 60px;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      box-shadow: 0 3px 12px rgba(15,23,42,.06);
+    }
+
+    .ad-250 {
+      min-height: 270px;
+    }
+
+    .ad-label {
+      width: 100%;
+      text-align: center;
+      color: #94a3b8;
+      font-size: 10px;
+      margin-bottom: 4px;
+    }
+
+    /* =========================
+       SECTIONS
+    ========================== */
+
+    .section {
+      display: none;
+    }
+
+    .section.active {
+      display: block;
+    }
+
+    .card {
+      background: white;
+      margin: 12px;
+      padding: 17px;
+      border-radius: 20px;
+      box-shadow: 0 4px 16px rgba(15,23,42,.06);
+    }
+
+    .card-title {
+      font-size: 20px;
+      font-weight: 800;
+      margin: 0 0 8px;
+    }
+
+    .muted {
+      color: #64748b;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    /* =========================
+       LEVEL
+    ========================== */
+
+    .level-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .level-badge {
+      background: #eff6ff;
+      color: #2563eb;
+      padding: 7px 11px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .progress-track {
+      width: 100%;
+      height: 13px;
+      margin: 14px 0 9px;
+      background: #e2e8f0;
+      border-radius: 50px;
+      overflow: hidden;
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg,#2563eb,#06b6d4);
+      border-radius: 50px;
+      transition: width .3s ease;
+    }
+
+    .progress-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 13px;
+      color: #64748b;
+    }
+
+    .play-button {
+      width: 100%;
+      border: 0;
+      padding: 17px;
+      margin-top: 17px;
+      border-radius: 17px;
+      background: linear-gradient(135deg,#2563eb,#1d4ed8);
+      color: white;
+      font-size: 19px;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 7px 15px rgba(37,99,235,.22);
+    }
+
+    .play-button:active {
+      transform: scale(.98);
+    }
+
+    /* =========================
+       STATS
+    ========================== */
+
+    .stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .stat {
+      padding: 13px;
+      background: #f8fafc;
+      border-radius: 15px;
+    }
+
+    .stat-title {
+      color: #64748b;
+      font-size: 12px;
+    }
+
+    .stat-value {
+      margin-top: 5px;
+      font-size: 22px;
+      font-weight: 800;
+    }
+
+    /* =========================
+       FORM
+    ========================== */
+
+    .input,
+    .select {
+      width: 100%;
+      border: 1px solid #cbd5e1;
+      border-radius: 12px;
+      padding: 13px;
+      margin-top: 8px;
+      margin-bottom: 10px;
+      background: white;
+      font-size: 15px;
+      outline: none;
+    }
+
+    .input:focus,
+    .select:focus {
+      border-color: #2563eb;
+    }
+
+    .primary-button,
+    .dark-button {
+      width: 100%;
+      border: 0;
+      border-radius: 13px;
+      padding: 13px;
+      background: #111827;
+      color: white;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .primary-button {
+      background: #2563eb;
+    }
+
+    /* =========================
+       REFERRAL
+    ========================== */
+
+    .ref-box {
+      background: #f8fafc;
+      border-radius: 14px;
+      padding: 12px;
+      margin-top: 12px;
+      word-break: break-all;
+      font-size: 12px;
+      color: #475569;
+    }
+
+    .ref-info {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .ref-stat {
+      padding: 13px;
+      background: #eff6ff;
+      border-radius: 14px;
+    }
+
+    /* =========================
+       CAMPAIGN
+    ========================== */
+
+    .countdown {
+      text-align: center;
+      font-size: 28px;
+      font-weight: 800;
+      padding: 20px 5px;
+      color: #1d4ed8;
+    }
+
+    .campaign-status {
+      text-align: center;
+      font-size: 13px;
+      color: #64748b;
+    }
+
+    /* =========================
+       NOTICE
+    ========================== */
+
+    .security-notice {
+      margin: 12px;
+      padding: 13px;
+      background: #fff7ed;
+      border: 1px solid #fed7aa;
+      border-radius: 15px;
+      color: #9a3412;
+      font-size: 12px;
+      line-height: 1.55;
+    }
+
+    /* =========================
+       BOTTOM NAV
+    ========================== */
+
+    .bottom-nav {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 9999;
+      background: rgba(255,255,255,.97);
+      backdrop-filter: blur(12px);
+      border-top: 1px solid #e2e8f0;
+      display: flex;
+      justify-content: center;
+      gap: 5px;
+      padding: 9px 7px calc(9px + env(safe-area-inset-bottom));
+    }
+
+    .nav-button {
+      flex: 1;
+      max-width: 150px;
+      border: 0;
+      background: transparent;
+      color: #64748b;
+      padding: 8px 4px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .nav-button.active {
+      background: #eff6ff;
+      color: #2563eb;
+    }
+
+    .nav-icon {
+      display: block;
+      font-size: 19px;
+      margin-bottom: 2px;
+    }
+
+    /* =========================
+       POPUP
+    ========================== */
+
+    .modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 10000;
+      background: rgba(15,23,42,.68);
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .modal.show {
+      display: flex;
+    }
+
+    .modal-card {
+      width: 100%;
+      max-width: 400px;
+      background: white;
+      border-radius: 22px;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .modal-title {
+      font-size: 21px;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+
+    .close-button {
+      width: 100%;
+      border: 0;
+      background: #111827;
+      color: white;
+      padding: 13px;
+      border-radius: 13px;
+      margin-top: 15px;
+      font-weight: 700;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="app">
+
+  <!-- =========================
+       HEADER
+  ========================== -->
+
+  <header class="hero-header">
+
+    <div class="profile-row">
+
+      <div id="avatarPlaceholder" class="profile-placeholder">
+        👤
+      </div>
+
+      <img
+        id="telegramAvatar"
+        class="profile-photo"
+        style="display:none;"
+        alt="Profile"
+      >
+
+      <div>
+        <div class="brand">Garments Hero</div>
+        <div class="tagline">Ad দেখুন, Income করুন</div>
+      </div>
+
+    </div>
+
+    <div class="coin-box">
+      <div class="coin-label">আপনার Balance</div>
+      <div class="coin-value">
+        🪙 <span id="coinBalance">0</span> Coins
+      </div>
+    </div>
+
+  </header>
+
+
+  <!-- =========================
+       TOP 320x50 AD
+  ========================== -->
+
+  <div class="ad-box">
+
+    <div>
+
+      <div class="ad-label">Advertisement</div>
+
+      <script>
+        atOptions = {
+          'key':'22791b3315db724a6660643268b32cc2',
+          'format':'iframe',
+          'height':50,
+          'width':320,
+          'params':{}
+        };
+      </script>
+
+      <script src="https://www.highrevenueformat.com/22791b3315db724a6660643268b32cc2/invoke.js"></script>
+
+    </div>
+
+  </div>
+
+
+  <!-- =========================
+       HOME
+  ========================== -->
+
+  <section id="homeSection" class="section active">
+
+    <div class="card">
+
+      <div class="level-head">
+
+        <div>
+          <div class="card-title">
+            🎮 Level <span id="currentLevel">1</span>
+          </div>
+
+          <div class="muted">
+            প্রতি level-এ 12টি verified ad completion প্রয়োজন।
+          </div>
+        </div>
+
+        <div class="level-badge">
+          12 Ads
+        </div>
+
+      </div>
+
+
+      <div class="progress-track">
+        <div id="progressBar" class="progress-bar"></div>
+      </div>
+
+
+      <div class="progress-row">
+        <span>Ad Progress</span>
+        <strong>
+          <span id="adsCompleted">0</span> / 12
+        </strong>
+      </div>
+
+
+      <button
+        id="playButton"
+        class="play-button"
+        onclick="startPlay()"
+      >
+        ▶ Play / Continue
+      </button>
+
+
+      <div class="muted" style="margin-top:12px;">
+        Play চাপলে আপনার ad experience শুরু হবে।
+        Reward দেওয়ার জন্য ad network-এর genuine completion verification
+        প্রয়োজন।
+      </div>
+
+    </div>
+
+
+    <!-- 300x250 -->
+
+    <div class="ad-box ad-250">
+
+      <div>
+
+        <div class="ad-label">Advertisement</div>
+
+        <script>
+          atOptions = {
+            'key':'132cbf6ba1e683adfcd45a7f9960a1f6',
+            'format':'iframe',
+            'height':250,
+            'width':300,
+            'params':{}
+          };
+        </script>
+
+        <script src="https://www.highrevenueformat.com/132cbf6ba1e683adfcd45a7f9960a1f6/invoke.js"></script>
+
+      </div>
+
+    </div>
+
+
+    <!-- =========================
+         STATS
+    ========================== -->
+
+    <div class="card">
+
+      <div class="stats">
+
+        <div class="stat">
+          <div class="stat-title">Completed Levels</div>
+          <div id="completedLevels" class="stat-value">0</div>
+        </div>
+
+        <div class="stat">
+          <div class="stat-title">Current Level</div>
+          <div id="currentLevel2" class="stat-value">1</div>
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- PROFITABLE RATE CONTAINER -->
+
+    <div class="ad-box">
+
+      <div style="width:100%;">
+
+        <div class="ad-label">Advertisement</div>
+
+        <div id="container-a89c594005448c0475de633a657cd90e"></div>
+
+        <script
+          async="async"
+          data-cfasync="false"
+          src="https://pl31153987.profitableratecpmnetwork.com/a89c594005448c0475de633a657cd90e/invoke.js">
+        </script>
+
+      </div>
+
+    </div>
+
+
+    <!-- Additional supplied ad -->
+
+    <div class="ad-box">
+
+      <script src="https://pl31153985.profitableratecpmnetwork.com/ea/0c/49/ea0c49d2fd8eb9b2b97b344ec7a2de5d.js"></script>
+
+    </div>
+
+  </section>
+
+
+  <!-- =========================
+       REFERRAL
+  ========================== -->
+
+  <section id="referralSection" class="section">
+
+    <div class="card">
+
+      <div class="card-title">
+        👥 Referral Program
+      </div>
+
+      <div class="muted">
+        আপনার referral link দিয়ে নতুন valid user join করলে
+        referrer-এর জন্য 50 Coins bonus।
+        Referred user's eligible earnings-এর উপর lifetime 5% commission।
+      </div>
+
+
+      <div class="ref-box">
+        <span id="referralLink">Loading...</span>
+      </div>
+
+
+      <button
+        class="primary-button"
+        style="margin-top:10px;"
+        onclick="copyReferral()"
+      >
+        📋 Copy Referral Link
+      </button>
+
+
+      <div class="ref-info">
+
+        <div class="ref-stat">
+          <div class="stat-title">Join Bonus</div>
+          <div class="stat-value">50</div>
+          <div class="muted">Coins</div>
+        </div>
+
+        <div class="ref-stat">
+          <div class="stat-title">Commission</div>
+          <div class="stat-value">5%</div>
+          <div class="muted">Lifetime</div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- =========================
+       WITHDRAW
+  ========================== -->
+
+  <section id="withdrawSection" class="section">
+
+    <div class="card">
+
+      <div class="card-title">
+        💸 Withdrawal
+      </div>
+
+      <div class="muted">
+        bKash, Nagad অথবা Rocket নির্বাচন করে আপনার নম্বর ও
+        withdrawal amount দিন।
+      </div>
+
+
+      <select id="withdrawMethod" class="select">
+
+        <option value="bKash">bKash</option>
+        <option value="Nagad">Nagad</option>
+        <option value="Rocket">Rocket</option>
+
+      </select>
+
+
+      <input
+        id="withdrawNumber"
+        class="input"
+        type="tel"
+        inputmode="numeric"
+        placeholder="bKash / Nagad / Rocket নম্বর"
+      >
+
+
+      <input
+        id="withdrawAmount"
+        class="input"
+        type="number"
+        min="1"
+        placeholder="কত Coins তুলবেন?"
+      >
+
+
+      <button
+        class="primary-button"
+        onclick="submitWithdrawal()"
+      >
+        Submit Withdrawal Request
+      </button>
+
+
+      <div
+        id="withdrawMessage"
+        class="muted"
+        style="margin-top:12px;"
+      ></div>
+
+    </div>
+
+  </section>
+
+
+  <!-- =========================
+       CAMPAIGN
+  ========================== -->
+
+  <section id="campaignSection" class="section">
+
+    <div class="card">
+
+      <div class="card-title">
+        ⏳ Campaign
+      </div>
+
+      <div class="muted">
+        বর্তমান campaign-এর countdown
+      </div>
+
+      <div id="countdown" class="countdown">
+        Loading...
+      </div>
+
+      <div id="campaignStatus" class="campaign-status">
+        Campaign active
+      </div>
+
+    </div>
+
+
+    <div class="card">
+
+      <div class="card-title">
+        📊 Campaign Rules
+      </div>
+
+      <div class="muted">
+        • 12 verified ad completion = 1 level<br>
+        • Level 1 থেকে Level 100,000 পর্যন্ত<br>
+        • Coin value admin পরে নির্ধারণ করবে<br>
+        • Referral join bonus = 50 Coins<br>
+        • Lifetime referral commission = 5%
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- =========================
+       SECURITY NOTICE
+  ========================== -->
+
+  <div class="security-notice">
+
+    🔒 <strong>Security:</strong>
+    Firebase database বর্তমানে locked আছে।
+    তাই এই public frontend সরাসরি database-এ Coins,
+    referral বা withdrawal data লিখছে না।
+    এতে client-side থেকে balance জাল করার ঝুঁকি কমে।
+    Production version-এ verified reward processing এবং
+    secure Firebase rules/backend সংযুক্ত করতে হবে।
+
+  </div>
+
+
+  <!-- =========================
+       BOTTOM NAV
+  ========================== -->
+
+  <nav class="bottom-nav">
+
+    <button
+      class="nav-button active"
+      onclick="openSection('homeSection',this)"
+    >
+      <span class="nav-icon">🏠</span>
+      Home
+    </button>
+
+
+    <button
+      class="nav-button"
+      onclick="openSection('referralSection',this)"
+    >
+      <span class="nav-icon">👥</span>
+      Referral
+    </button>
+
+
+    <button
+      class="nav-button"
+      onclick="openSection('withdrawSection',this)"
+    >
+      <span class="nav-icon">💸</span>
+      Withdraw
+    </button>
+
+
+    <button
+      class="nav-button"
+      onclick="openSection('campaignSection',this)"
+    >
+      <span class="nav-icon">⏳</span>
+      Campaign
+    </button>
+
+  </nav>
+
+</div>
+
+
+<!-- =========================
+     MESSAGE MODAL
+========================== -->
+
+<div id="messageModal" class="modal">
+
+  <div class="modal-card">
+
+    <div class="modal-title" id="modalTitle">
+      Garments Hero
+    </div>
+
+    <div class="muted" id="modalMessage">
+      Message
+    </div>
+
+    <button
+      class="close-button"
+      onclick="closeModal()"
+    >
+      OK
+    </button>
+
+  </div>
+
+</div>
+
+
+<!-- =========================
+     FIREBASE
+========================== -->
+
+<script type="module">
+
+  import {
+    initializeApp
+  } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
+
+  import {
+    getAnalytics
+  } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-analytics.js";
+
+
+  const firebaseConfig = {
+
+    apiKey:
+      "AIzaSyAy-ogRVGaUbTJSmy1oZau2fD8WPj-C6xQ",
+
+    authDomain:
+      "garments-hero-apps-mini.firebaseapp.com",
+
+    databaseURL:
+      "https://garments-hero-apps-mini-default-rtdb.asia-southeast1.firebasedatabase.app",
+
+    projectId:
+      "garments-hero-apps-mini",
+
+    storageBucket:
+      "garments-hero-apps-mini.firebasestorage.app",
+
+    messagingSenderId:
+      "876997460555",
+
+    appId:
+      "1:876997460555:web:bef4562686d791022243ce",
+
+    measurementId:
+      "G-623RYXLL8M"
+
+  };
+
+
+  const app = initializeApp(firebaseConfig);
+
+
+  try {
+
+    getAnalytics(app);
+
+  } catch (error) {
+
+    console.log("Analytics unavailable");
+
+  }
+
+
+  /* Telegram */
+
+  const telegram = window.Telegram?.WebApp;
+
+
+  if (telegram) {
+
+    telegram.ready();
+    telegram.expand();
+
+  }
+
+
+  const telegramUser =
+    telegram?.initDataUnsafe?.user || null;
+
+
+  window.GarmentsHeroTelegramUser =
+    telegramUser;
+
+
+  if (telegramUser) {
+
+    const photo =
+      document.getElementById("telegramAvatar");
+
+    const placeholder =
+      document.getElementById("avatarPlaceholder");
+
+
+    if (telegramUser.photo_url) {
+
+      photo.src =
+        telegramUser.photo_url;
+
+      photo.style.display =
+        "block";
+
+      placeholder.style.display =
+        "none";
+
+    }
+
+  }
+
+
+  /* User ID */
+
+  const userId =
+    telegramUser?.id
+      ? String(telegramUser.id)
+      : "web-user";
+
+
+  window.GarmentsHeroUserId =
+    userId;
+
+
+  /* Referral */
+
+  const referralLink =
+    window.location.origin +
+    window.location.pathname +
+    "?startapp=ref_" +
+    encodeURIComponent(userId);
+
+
+  document.getElementById(
+    "referralLink"
+  ).textContent = referralLink;
+
+
+  window.GarmentsHeroFirebaseApp =
+    app;
+
+</script>
+
+
+<script>
+
+  /* ==================================================
+     LOCAL UI STATE
+     --------------------------------------------------
+     This is only a temporary browser-side display state.
+     It is NOT the production reward ledger.
+  ================================================== */
+
+  const STORAGE_KEY =
+    "garments_hero_ui_state_v1";
+
+
+  let appState = {
+
+    coins: 0,
+
+    level: 1,
+
+    adsCompleted: 0,
+
+    completedLevels: 0
+
+  };
+
+
+  try {
+
+    const saved =
+      localStorage.getItem(
+        STORAGE_KEY
+      );
+
+    if (saved) {
+
+      const parsed =
+        JSON.parse(saved);
+
+      if (parsed &&
+          typeof parsed === "object") {
+
+        appState = {
+          ...appState,
+          ...parsed
+        };
+
+      }
+
+    }
+
+  } catch (error) {
+
+    console.log(
+      "Local state unavailable"
+    );
+
+  }
+
+
+  function saveState() {
+
+    try {
+
+      localStorage.setItem(
+        STORAGE_KEY,
+        JSON.stringify(appState)
+      );
+
+    } catch (error) {
+
+      console.log(
+        "Could not save local state"
+      );
+
+    }
+
+  }
+
+
+  function render() {
+
+    document.getElementById(
+      "coinBalance"
+    ).textContent =
+      Number(appState.coins).toLocaleString();
+
+
+    document.getElementById(
+      "currentLevel"
+    ).textContent =
+      appState.level;
+
+
+    document.getElementById(
+      "currentLevel2"
+    ).textContent =
+      appState.level;
+
+
+    document.getElementById(
+      "adsCompleted"
+    ).textContent =
+      appState.adsCompleted;
+
+
+    document.getElementById(
+      "completedLevels"
+    ).textContent =
+      appState.completedLevels;
+
+
+    const percentage =
+      Math.min(
+        100,
+        (appState.adsCompleted / 12) * 100
+      );
+
+
+    document.getElementById(
+      "progressBar"
+    ).style.width =
+      percentage + "%";
+
+  }
+
+
+  /* ==================================================
+     NAVIGATION
+  ================================================== */
+
+  function openSection(
+    sectionId,
+    button
+  ) {
+
+    document
+      .querySelectorAll(".section")
+      .forEach(section => {
+
+        section.classList.remove(
+          "active"
+        );
+
+      });
+
+
+    const target =
+      document.getElementById(
+        sectionId
+      );
+
+
+    if (target) {
+
+      target.classList.add(
+        "active"
+      );
+
+    }
+
+
+    document
+      .querySelectorAll(".nav-button")
+      .forEach(btn => {
+
+        btn.classList.remove(
+          "active"
+        );
+
+      });
+
+
+    if (button) {
+
+      button.classList.add(
+        "active"
+      );
+
+    }
+
+
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth"
+    });
+
+  }
+
+
+  /* ==================================================
+     PLAY
+  ================================================== */
+
+  function startPlay() {
+
+    showModal(
+
+      "🎮 Play শুরু হচ্ছে",
+
+      "Ad experience-এর জন্য প্রস্তুত। তবে সাধারণ banner ad দেখা আর verified rewarded-ad completion এক জিনিস নয়। legitimate completion callback সংযুক্ত না হওয়া পর্যন্ত 12টি ad completion বা Coins fake করে যোগ করা হবে না।"
+
+    );
+
+  }
+
+
+  /* ==================================================
+     REFERRAL
+  ================================================== */
+
+  async function copyReferral() {
+
+    const text =
+      document.getElementById(
+        "referralLink"
+      ).textContent;
+
+
+    try {
+
+      await navigator.clipboard.writeText(
+        text
+      );
+
+
+      showModal(
+        "✅ Copied",
+        "আপনার referral link copy হয়েছে।"
+      );
+
+    } catch (error) {
+
+      showModal(
+        "Referral Link",
+        text
+      );
+
+    }
+
+  }
+
+
+  /* ==================================================
+     WITHDRAWAL UI
+  ================================================== */
+
+  function submitWithdrawal() {
+
+    const method =
+      document.getElementById(
+        "withdrawMethod"
+      ).value;
+
+
+    const number =
+      document.getElementById(
+        "withdrawNumber"
+      ).value.trim();
+
+
+    const amount =
+      Number(
+        document.getElementById(
+          "withdrawAmount"
+        ).value
+      );
+
+
+    const message =
+      document.getElementById(
+        "withdrawMessage"
+      );
+
+
+    if (!number) {
+
+      message.textContent =
+        "দয়া করে payment number দিন।";
+
+      return;
+
+    }
+
+
+    if (!amount || amount <= 0) {
+
+      message.textContent =
+        "দয়া করে valid Coins amount দিন।";
+
+      return;
+
+    }
+
+
+    /*
+      IMPORTANT:
+      Firebase rules are currently locked.
+      Therefore this frontend does NOT pretend
+      that the withdrawal has been submitted
+      to the real database.
+    */
+
+    message.textContent =
+      method +
+      " withdrawal interface প্রস্তুত। " +
+      "Secure backend/payment verification সংযুক্ত না হওয়া পর্যন্ত " +
+      "কোনো real withdrawal বা balance deduction করা হচ্ছে না।";
+
+  }
+
+
+  /* ==================================================
+     MODAL
+  ================================================== */
+
+  function showModal(
+    title,
+    message
+  ) {
+
+    document.getElementById(
+      "modalTitle"
+    ).textContent =
+      title;
+
+
+    document.getElementById(
+      "modalMessage"
+    ).textContent =
+      message;
+
+
+    document.getElementById(
+      "messageModal"
+    ).classList.add(
+      "show"
+    );
+
+  }
+
+
+  function closeModal() {
+
+    document.getElementById(
+      "messageModal"
+    ).classList.remove(
+      "show"
+    );
+
+  }
+
+
+  /* ==================================================
+     CAMPAIGN COUNTDOWN
+     --------------------------------------------------
+     Current campaign end:
+     3 December 2026, 23:59:59
+  ================================================== */
+
+  const campaignEnd =
+    new Date(
+      "2026-12-03T23:59:59+06:00"
+    );
+
+
+  function updateCountdown() {
+
+    const now =
+      new Date();
+
+
+    let remaining =
+      campaignEnd.getTime() -
+      now.getTime();
+
+
+    const countdown =
+      document.getElementById(
+        "countdown"
+      );
+
+
+    const status =
+      document.getElementById(
+        "campaignStatus"
+      );
+
+
+    if (remaining <= 0) {
+
+      countdown.textContent =
+        "Campaign Ended";
+
+      status.textContent =
+        "Campaign শেষ হয়েছে.";
+
+      return;
+
+    }
+
+
+    const days =
+      Math.floor(
+        remaining /
+        (1000 * 60 * 60 * 24)
+      );
+
+
+    remaining %=
+      (1000 * 60 * 60 * 24);
+
+
+    const hours =
+      Math.floor(
+        remaining /
+        (1000 * 60 * 60)
+      );
+
+
+    remaining %=
+      (1000 * 60 * 60);
+
+
+    const minutes =
+      Math.floor(
+        remaining /
+        (1000 * 60)
+      );
+
+
+    remaining %=
+      (1000 * 60);
+
+
+    const seconds =
+      Math.floor(
+        remaining /
+        1000
+      );
+
+
+    countdown.textContent =
+      days + " দিন " +
+      hours + " ঘন্টা " +
+      minutes + " মিনিট " +
+      seconds + " সেকেন্ড";
+
+  }
+
+
+  /* ==================================================
+     INITIALIZE
+  ================================================== */
+
+  render();
+
+  updateCountdown();
+
+  setInterval(
+    updateCountdown,
+    1000
+  );
+
+
+  /*
+    Expose functions for future verified
+    ad-network integration.
+
+    IMPORTANT:
+    Do not call these from a normal timer.
+    A trusted/verified ad completion mechanism
+    must be connected before using them.
+  */
+
+  window.GarmentsHero = {
+
+    getState: function() {
+
+      return {
+        ...appState
+      };
+
+    },
+
+
+    /*
+      This function is intentionally disabled
+      for normal client-side use.
+
+      Production implementation should call
+      a server-verified reward endpoint after
+      an authentic rewarded-ad completion.
+    */
+
+    recordVerifiedAdCompletion: function() {
+
+      showModal(
+        "🔒 Verification Required",
+        "Verified ad-completion callback এখনো সংযুক্ত করা হয়নি। তাই reward/Coins দেওয়া হয়নি।"
+      );
+
+    }
+
+  };
+
+
+</script>
+
+
+<!--
+======================================================
+OTHER SUPPLIED AD TAGS
+======================================================
+
+Monetag/other supplied tags can require their own
+network callback/placement behavior. They are kept
+separate so they do not cover the Play button.
+-->
+
+
+<script
+  async
+  data-cfasync="false"
+  src="https://quge5.com/88/tag.min.js"
+  data-zone="275995">
+</script>
+
+
+<script>
+  (function () {
+
+    const s =
+      document.createElement("script");
+
+    s.dataset.zone =
+      "11715396";
+
+    s.src =
+      "https://al5sm.com/tag.min.js";
+
+    s.async = true;
+
+    document.body.appendChild(s);
+
+  })();
+</script>
+
+
+<script>
+  (function () {
+
+    const s =
+      document.createElement("script");
+
+    s.dataset.zone =
+      "11715364";
+
+    s.src =
+      "https://n6wxm.com/vignette.min.js";
+
+    s.async = true;
+
+    document.body.appendChild(s);
+
+  })();
+</script>
+
+
+</body>
+</html>
